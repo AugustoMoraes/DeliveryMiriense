@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from 'react'
-import {View, Text, Image, TouchableOpacity, Modal, FlatList, TextInput, InteractionManager} from 'react-native'
+import {View, Text, Image, TouchableOpacity, Modal, FlatList, TextInput} from 'react-native'
 
 import heineken from '../../images/heineken.jpg'
 import styles from './styles'
@@ -26,8 +26,8 @@ export default function Porao(){
             let list = {
               key: childItem.key,
               nome: childItem.val().nome,
-              valor: childItem.val().valor,
-              cont: childItem.val().cont,
+              valor: parseFloat(childItem.val().valor),
+              cont: parseFloat(childItem.val().cont),
             };
             
             setProdutos(oldArray => [...oldArray, list]); 
@@ -41,12 +41,7 @@ export default function Porao(){
       
     }, []);
     
-    function montarMensagem(){
-      
-     
-    }
     function confirmar(){
-      montarMensagem()
       alert(msg)
     }
     
@@ -71,11 +66,14 @@ export default function Porao(){
        contProdutos.forEach((childItem)=>{
          if(item.key == childItem.key){
            setProdutos(childItem.cont++)
-           setTotal(total + (parseFloat(childItem.cont) * parseFloat(childItem.val)))
-           console.log(total)
+           calcTotProdutos(childItem.cont, childItem.val)
          }
        })
 
+    }
+    function calcTotProdutos(qtd, valor){  
+        aux =  qtd * valor
+        console.log(aux)
     }
     return(
         <View style={styles.container}>
