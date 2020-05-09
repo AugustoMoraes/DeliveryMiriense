@@ -12,14 +12,14 @@ export default function Porao(){
 
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
+    const [contProdutos, setContProdutos] = useState([])
     const [nome, setNome] = useState('')
     const [msg, setMsg] = useState('')
-    const [contador, setContador] = useState(0)
     const [total, setTotal] = useState(0)
     useEffect(()=> {
       
       async function loadingList(){
-        await firebase.database().ref('porao').on('value', (snapshot)=> {
+        await firebase.database().ref('porao').once('value', (snapshot)=> {
           setProdutos([]);
           
           snapshot.forEach((childItem) => {
@@ -31,6 +31,7 @@ export default function Porao(){
             };
             
             setProdutos(oldArray => [...oldArray, list]); 
+            setContProdutos(oldArray => [...oldArray, list]); 
           });
           
         });
@@ -48,14 +49,7 @@ export default function Porao(){
       montarMensagem()
       alert(msg)
     }
-    function somarProduto(item){
-        //console.log((item.nome) + ' - ' + (++item.cont))
-        
-    }
-
-    function subtrairProduto(){
-        
-    }
+    
     function pedir(){
         setModalVisible(true)
       
@@ -63,11 +57,26 @@ export default function Porao(){
     function sair(viseble){
         setModalVisible(viseble)
     }
-    function incrementProduto(item){
-      setContador(++item.cont)
+    function decrementarProduto(item){
+          
+      contProdutos.forEach((childItem)=>{
+        if(item.cont > 0){
+          if(item.key == childItem.key){    
+            setProdutos(childItem.cont--)
+          }
+        }
+      })
     }
-   //const total = qtdProdutoHeiniken * 6+ qtdProdutoBudwiser *5+ qtdProdutoPetra *4
-    
+    function incrementProduto(item){
+       contProdutos.forEach((childItem)=>{
+         if(item.key == childItem.key){
+           setProdutos(childItem.cont++)
+           setTotal(total + (parseFloat(childItem.cont) * parseFloat(childItem.val)))
+           console.log(total)
+         }
+       })
+
+    }
     return(
         <View style={styles.container}>
             <View style={styles.header}> 
@@ -75,7 +84,7 @@ export default function Porao(){
             </View>
             <FlatList
                 key= {item => item.key}
-                data={produtos}
+                data={contProdutos}
                 renderItem= {({item})=>(
                     <View style={styles.cardProduto}>
                     <Image source={heineken} style={styles.img}/>
@@ -84,12 +93,12 @@ export default function Porao(){
                     <Text style={styles.txtDesc}>Valor: R$: {item.valor}</Text>
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>quantidade:</Text>
-                            <TouchableOpacity style={styles.btnQtd} onPress={subtrairProduto}>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
                                 {/** <IconMinus name="minuscircle" size={15}/> */}
                                 <Text style={{fontSize:30}}> - </Text>
                             </TouchableOpacity>
                             <Text>
-                              {contador}
+                              {item.cont}
                             </Text>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProduto(item)}>
                                 {/**<IconPlus name="pluscircle" size={15}/>*/}
@@ -103,7 +112,7 @@ export default function Porao(){
             />      
             
             <View style={styles.viewTotPreco}>
-            <Text style={styles.txtTotPreco}>Total a pagar: 0 </Text>
+            <Text style={styles.txtTotPreco}>Total a pagar: {total} </Text>
             <TouchableOpacity style={styles.btnPedir} onPress={()=>pedir()}>
                 <Text style={styles.txtBtnPedir}>Pedir</Text>
             </TouchableOpacity>    
