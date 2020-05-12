@@ -77,14 +77,15 @@ export default function Porao(){
     }
 
     function incrementProduto(item){
-      
-      produtos.forEach((childItem)=>{
-        
+      produtos.forEach((childItem)=>{        
+        let totalValue = total
         if(item.key == childItem.key){
-          setContProdutos(childItem.cont++)
+          setContProdutos(childItem.cont + 1)
+          totalValue += childItem.valor * childItem.cont
+          console.log(totalValue)
+          setTotal(totalValue)
         }
        })
-
     }
     function calcTotProdutos(qtd, valor, total){  
         setTotal(qtd*valor)
