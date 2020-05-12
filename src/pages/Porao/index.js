@@ -76,14 +76,12 @@ export default function Porao(){
       })
     }
 
-    function incrementProduto(item){
+    async function incrementProduto(item){
+
       produtos.forEach((childItem)=>{        
-        let totalValue = total
         if(item.key == childItem.key){
-          setContProdutos(childItem.cont + 1)
-          totalValue += childItem.valor * childItem.cont
-          console.log(totalValue)
-          setTotal(totalValue)
+          setContProdutos(childItem.cont++)
+          setTotal(total)
         }
        })
     }
