@@ -12,17 +12,14 @@ export default function Porao(){
 
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
-    const [contProdutos, setContProdutos] = useState([])
+    const [total, setTotal] = useState([])
     const [nome, setNome] = useState('')
     const [msg, setMsg] = useState('')
-    let [total, setTotal] = useState(0)
-    let soma = []
     useEffect(()=> {
       
       async function loadingList(){
         await firebase.database().ref('porao').on('value', (snapshot)=> {
           setProdutos([])
-          setContProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
               key: childItem.key,
@@ -30,9 +27,7 @@ export default function Porao(){
               valor: parseFloat(childItem.val().valor),
               cont: parseFloat(childItem.val().cont),
             };
-            
             setProdutos(oldArray => [...oldArray, list]); 
-            setContProdutos(oldArray => [...oldArray, list]); 
           });
           
         });
@@ -66,24 +61,27 @@ export default function Porao(){
         setModalVisible(viseble)
     }
     function decrementarProduto(item){
-          
-      produtos.forEach((childItem)=>{
-        if(item.cont > 0){
-          if(item.key == childItem.key){    
-            setContProdutos(childItem.cont--)
-          }
+      setProdutos(produtos.map(produto =>{
+        if((item.key == produto.key) && (produto.cont != 0)){
+          produto.cont--
         }
-      })
+        return produto
+      }))
     }
 
-    async function incrementProduto(item){
-
-      produtos.forEach((childItem)=>{        
-        if(item.key == childItem.key){
-          setContProdutos(childItem.cont++)
-          setTotal(total)
+    function incrementProduto(item){
+      setProdutos(produtos.map(produto =>{
+        if(item.key == produto.key){
+          produto.cont++
         }
-       })
+        return produto
+      }))
+    }
+    function getTotal(){
+      return produtos.reduce((total,produto)=>{
+        total+= (produto.valor * produto.cont)
+        return total
+      },0)
     }
     function calcTotProdutos(qtd, valor, total){  
         setTotal(qtd*valor)
@@ -123,7 +121,7 @@ export default function Porao(){
             />      
             
             <View style={styles.viewTotPreco}>
-            <Text style={styles.txtTotPreco}>Total a pagar: {total} </Text>
+            <Text style={styles.txtTotPreco}>Total a pagar:  {getTotal()} </Text>
             <TouchableOpacity style={styles.btnPedir} onPress={()=>pedir()}>
                 <Text style={styles.txtBtnPedir}>Pedir</Text>
             </TouchableOpacity>    
