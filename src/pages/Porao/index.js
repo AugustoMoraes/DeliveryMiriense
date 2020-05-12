@@ -54,7 +54,7 @@ export default function Porao(){
             msg += `\n${childItem.nome}: ${childItem.cont}`
          }
       })
-      msg += `\nTotal: ${total}`
+      msg += `\nTotal: ${getTotal}`
       return msg
     }
     function sair(viseble){
