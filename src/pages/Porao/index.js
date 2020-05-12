@@ -15,13 +15,14 @@ export default function Porao(){
     const [contProdutos, setContProdutos] = useState([])
     const [nome, setNome] = useState('')
     const [msg, setMsg] = useState('')
-    const [total, setTotal] = useState(0)
+    let [total, setTotal] = useState(0)
+    let soma = []
     useEffect(()=> {
       
       async function loadingList(){
-        await firebase.database().ref('porao').once('value', (snapshot)=> {
-          setProdutos([]);
-          
+        await firebase.database().ref('porao').on('value', (snapshot)=> {
+          setProdutos([])
+          setContProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
               key: childItem.key,
@@ -47,33 +48,46 @@ export default function Porao(){
     
     function pedir(){
         setModalVisible(true)
+        let msg = montarMsg()
+        alert(msg)
       
+    }
+    function montarMsg(){
+        var msg =''
+        produtos.map((childItem)=>{
+        if(childItem.cont > 0){
+            msg += `\n${childItem.nome}: ${childItem.cont}`
+         }
+      })
+      msg += `\nTotal: ${total}`
+      return msg
     }
     function sair(viseble){
         setModalVisible(viseble)
     }
     function decrementarProduto(item){
           
-      contProdutos.forEach((childItem)=>{
+      produtos.forEach((childItem)=>{
         if(item.cont > 0){
           if(item.key == childItem.key){    
-            setProdutos(childItem.cont--)
+            setContProdutos(childItem.cont--)
           }
         }
       })
     }
+
     function incrementProduto(item){
-       contProdutos.forEach((childItem)=>{
-         if(item.key == childItem.key){
-           setProdutos(childItem.cont++)
-           calcTotProdutos(childItem.cont, childItem.val)
-         }
+      
+      produtos.forEach((childItem)=>{
+        
+        if(item.key == childItem.key){
+          setContProdutos(childItem.cont++)
+        }
        })
 
     }
-    function calcTotProdutos(qtd, valor){  
-        aux =  qtd * valor
-        console.log(aux)
+    function calcTotProdutos(qtd, valor, total){  
+        setTotal(qtd*valor)
     }
     return(
         <View style={styles.container}>
@@ -82,7 +96,7 @@ export default function Porao(){
             </View>
             <FlatList
                 key= {item => item.key}
-                data={contProdutos}
+                data={produtos}
                 renderItem= {({item})=>(
                     <View style={styles.cardProduto}>
                     <Image source={heineken} style={styles.img}/>
