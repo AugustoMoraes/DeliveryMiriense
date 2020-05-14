@@ -9,13 +9,12 @@ import { View,
          Linking
         } from 'react-native'
 
+import firebase from '../../database/firebase'
+
 import heineken from '../../images/heineken.jpg'
 import styles from './styles'
 import Icon from 'react-native-vector-icons/AntDesign'
-//import IconPlus from 'react-native-vector-icons/AntDesign'
 Icon.loadFont()
-//IconPlus.loadFont()
-import firebase from '../../database/firebase'
 
 export default function Porao(){
 
@@ -27,8 +26,9 @@ export default function Porao(){
     const [numero, setNumero] = useState('')
     const [bairro, setBairro] = useState('')
     const [complemento, setComplemento] = useState('')
-    const [msg, setMsg] = useState('')
+  
     const phone =  '55091998189662'
+  
     useEffect(()=> {
       
       async function loadingList(){
@@ -54,12 +54,18 @@ export default function Porao(){
     function confirmar(){
       if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
        let pedido = montarMsg()
+       setModalVisible(false)
+       zerarQtdProdutos()
        Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
         alert('Preencha todos os campos!')
       }
     }
-
+    function zerarQtdProdutos(){
+      produtos.map( produto =>{
+        produto.cont = 0
+      })
+    }
     function isValidaProduto(){
       let conProduto = 0
       produtos.map( produto =>{
