@@ -52,8 +52,9 @@ export default function Porao(){
     }, []);
     
     function confirmar(){
-      if(nome != '' || endereco != '' || numero != '' || bairro!= '' || complemento!= ''){
-        Linking.openURL(`whatsapp://send?text=${msg}&phone=${phone}`)
+      if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
+       let pedido = montarMsg()
+       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
         alert('Preencha todos os campos!')
       }
@@ -79,16 +80,13 @@ export default function Porao(){
       }
     }
     function montarMsg(){
-        var mesg =''
+        var msg =''
         produtos.map((childItem)=>{
         if(childItem.cont > 0){
-            mesg += `${childItem.cont} ${childItem.nome}\n`
+            msg += `${childItem.cont} ${childItem.nome}\n`
          }
       })
-      let mensagem = `Olá, me chamo ${nome} e gostaria de pedir:\n${mesg}Total: ${getTotal()}\nLocal de entrega:\nendereço: ${endereco}\nnúmero? ${numero}\ncomplemento: ${complemento}`
-      //msg += `\nnome: ${nome}\nendereço: ${endereco}\nnúmero? ${numero}\ncomplemento: ${complemento}\nTotal: ${getTotal()}`
-      montarMsg()
-      return setMsg(mensagem)
+      return msg
     }
     function cancelar(){
       setModalVisible(false)
@@ -203,7 +201,7 @@ export default function Porao(){
             />
             <TextInput
                 style={styles.inputPedido}
-                placeholder= "Complemento"
+                placeholder= "Complemento (OPICIONAL)"
                 value={complemento}
                 onChangeText={(value)=>{setComplemento(value)}}
             />
