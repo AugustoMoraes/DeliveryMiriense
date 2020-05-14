@@ -7,7 +7,7 @@ export default StyleSheet.create({
     },
     header:{
         backgroundColor: '#8A2BE2',
-        height: 40,
+        height: 50,
         justifyContent: 'center'
     },
     txtHeader:{
@@ -23,7 +23,7 @@ export default StyleSheet.create({
         justifyContent: 'space-evenly',
         alignItems: 'center',
         borderRadius: 10,
-        borderColor: '#000',
+        elevation: 10,
     },
     descProduto:{
         paddingHorizontal: 5
@@ -41,7 +41,6 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     btnQtd:{
-        backgroundColor: '#777',
         height: 30,
         width: 30,
         marginHorizontal: 10,
@@ -49,37 +48,70 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     viewTotPreco:{
+        height: 50,
         flexDirection: 'row',
         backgroundColor: '#8A2BE2',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-around',
         alignItems: 'center',        
     },
     txtTotPreco:{
-        fontSize: 20,
-        color: '#fff'
+        fontSize: 25,
+        color: '#fff',
+        padding:3
     },  
     btnPedir:{
-        backgroundColor: '#00FA9A',
+        //backgroundColor: '#8A2BE2',
         height: 30,
         width: 80,
         justifyContent: 'center',
         alignItems: 'center'
     },
     txtBtnPedir:{
-        fontSize: 20,
+        fontSize: 25,
         textTransform: 'uppercase',
         color: '#fff'
     },
     modalView: {
-        marginTop: '90%',
-        backgroundColor: "#4fd",
-        borderRadius: 20,
+        backgroundColor: "#8A2BE2",
+        borderTopRightRadius: 30,
+        borderTopLeftRadius: 30,
         padding: 10,
     },
+    viewTxtProdutos:{
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    txtProdutos:{
+        fontSize: 20,
+    },
     inputPedido:{
-        backgroundColor: '#ddd',
+        backgroundColor: '#FFF',
         borderRadius: 10,
         padding: 5,
         marginBottom:10
+    },
+    btnCancelar:{
+        marginTop: 10, 
+        marginBottom: 5,
+        height: 30,
+        backgroundColor: '#DC143C',
+        padding: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 7
+    },
+    btnConfirmar:{
+        marginTop: 10, 
+        marginBottom: 5,
+        height: 30,
+        backgroundColor: '#008000',
+        padding: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 7
+    },
+    txtPedido:{
+        fontSize: 17,
+        color: '#fff'
     }
 })

@@ -1,11 +1,20 @@
 import React,{useState, useEffect} from 'react'
-import {View, Text, Image, TouchableOpacity, Modal, FlatList, TextInput} from 'react-native'
+import { View, 
+         Text, 
+         Image, 
+         TouchableOpacity, 
+         Modal, 
+         FlatList, 
+         TextInput,
+         Linking
+        } from 'react-native'
 
 import heineken from '../../images/heineken.jpg'
 import styles from './styles'
-import IconMinus from 'react-native-vector-icons/AntDesign'
-import IconPlus from 'react-native-vector-icons/AntDesign'
-
+import Icon from 'react-native-vector-icons/AntDesign'
+//import IconPlus from 'react-native-vector-icons/AntDesign'
+Icon.loadFont()
+//IconPlus.loadFont()
 import firebase from '../../database/firebase'
 
 export default function Porao(){
@@ -14,7 +23,12 @@ export default function Porao(){
     const [produtos, setProdutos] = useState([])
     const [total, setTotal] = useState([])
     const [nome, setNome] = useState('')
+    const [endereco, setEndereco] = useState('')
+    const [numero, setNumero] = useState('')
+    const [bairro, setBairro] = useState('')
+    const [complemento, setComplemento] = useState('')
     const [msg, setMsg] = useState('')
+    const phone =  '55091998189662'
     useEffect(()=> {
       
       async function loadingList(){
@@ -38,28 +52,53 @@ export default function Porao(){
     }, []);
     
     function confirmar(){
-      alert(msg)
+      if(nome != '' || endereco != '' || numero != '' || bairro!= '' || complemento!= ''){
+        Linking.openURL(`whatsapp://send?text=${msg}&phone=${phone}`)
+      }else{
+        alert('Preencha todos os campos!')
+      }
     }
+
+    function isValidaProduto(){
+      let conProduto = 0
+      produtos.map( produto =>{
+        if(produto.cont > 0){
+          conProduto++
+        }
+      })
+
+      return conProduto > 0 ? true : false 
+    }
+
     
     function pedir(){
+      if(isValidaProduto()){
         setModalVisible(true)
-        let msg = montarMsg()
-        alert(msg)
-      
+      }else{
+        alert('Nenhum Produto selecionado para compra!')
+      }
     }
     function montarMsg(){
-        var msg =''
+        var mesg =''
         produtos.map((childItem)=>{
         if(childItem.cont > 0){
-            msg += `\n${childItem.nome}: ${childItem.cont}`
+            mesg += `${childItem.cont} ${childItem.nome}\n`
          }
       })
-      msg += `\nTotal: ${getTotal}`
-      return msg
+      let mensagem = `Olá, me chamo ${nome} e gostaria de pedir:\n${mesg}Total: ${getTotal()}\nLocal de entrega:\nendereço: ${endereco}\nnúmero? ${numero}\ncomplemento: ${complemento}`
+      //msg += `\nnome: ${nome}\nendereço: ${endereco}\nnúmero? ${numero}\ncomplemento: ${complemento}\nTotal: ${getTotal()}`
+      montarMsg()
+      return setMsg(mensagem)
     }
-    function sair(viseble){
-        setModalVisible(viseble)
+    function cancelar(){
+      setModalVisible(false)
+      setNome('')
+      setEndereco('')
+      setComplemento('')
+      setBairro('')
+      setNumero('')
     }
+
     function decrementarProduto(item){
       setProdutos(produtos.map(produto =>{
         if((item.key == produto.key) && (produto.cont != 0)){
@@ -83,9 +122,7 @@ export default function Porao(){
         return total
       },0)
     }
-    function calcTotProdutos(qtd, valor, total){  
-        setTotal(qtd*valor)
-    }
+    
     return(
         <View style={styles.container}>
             <View style={styles.header}> 
@@ -99,19 +136,19 @@ export default function Porao(){
                     <Image source={heineken} style={styles.img}/>
                     <View style={styles.descProduto}>
                     <Text style={styles.txtDesc}>Cerveja:{item.nome} </Text>
-                    <Text style={styles.txtDesc}>Valor: R$: {item.valor}</Text>
+                    <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
-                            <Text style={styles.txtDesc}>quantidade:</Text>
+                            <Text style={styles.txtDesc}>Quantidade:</Text>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
-                                {/** <IconMinus name="minuscircle" size={15}/> */}
-                                <Text style={{fontSize:30}}> - </Text>
+                                <Icon name="minuscircle" size={25} color="#ff0000"/>
+                                {/** <Text style={{fontSize:30}}> - </Text>*/}
                             </TouchableOpacity>
                             <Text>
                               {item.cont}
                             </Text>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProduto(item)}>
-                                {/**<IconPlus name="pluscircle" size={15}/>*/}
-                                <Text style={{fontSize:30}}> + </Text>
+                                <Icon name="pluscircle" size={25} color= '#008000'/>
+                                {/** <Text style={{fontSize:30}}> + </Text>*/}
                             </TouchableOpacity>
                         </View>
                     </View>               
@@ -121,7 +158,8 @@ export default function Porao(){
             />      
             
             <View style={styles.viewTotPreco}>
-            <Text style={styles.txtTotPreco}>Total a pagar:  {getTotal()} </Text>
+            <Text style={styles.txtTotPreco}>
+              TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())} </Text>
             <TouchableOpacity style={styles.btnPedir} onPress={()=>pedir()}>
                 <Text style={styles.txtBtnPedir}>Pedir</Text>
             </TouchableOpacity>    
@@ -132,9 +170,12 @@ export default function Porao(){
         visible={modalVisible}
         transparent= {true}
         >
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
           <View style={styles.modalView}>
             <TextInput
               style={styles.inputPedido}
+              returnKeyType = 'next'
+              enablesReturnKeyAutomatically = {true}
               placeholder= "Digite seu nome"
               value={nome}
               onChangeText={(value)=>{setNome(value)}}
@@ -143,42 +184,46 @@ export default function Porao(){
               <TextInput
                 style={[styles.inputPedido,{marginRight: 10, width: '80%'}]}
                 placeholder= "Endereço"
-                value={nome}
-                onChangeText={(value)=>{setNome(value)}}
+                value={endereco}
+                onChangeText={(value)=>{setEndereco(value)}}
               />
               <TextInput
                 style={styles.inputPedido}
                 placeholder= "Numero"
                 keyboardType= 'numeric'
-                value={nome}
-                onChangeText={(value)=>{setNome(value)}}
+                value={numero}
+                onChangeText={(value)=>{setNumero(value)}}
               />
             </View>
             <TextInput
                 style={styles.inputPedido}
                 placeholder= "Bairro"
-                value={nome}
-                onChangeText={(value)=>{setNome(value)}}
-              />
-              <Text>Valor Total: {total} </Text>
-              <Text>Valor Total: {total} </Text>
-              <Text>Valor Total: {total} </Text>
+                value={bairro}
+                onChangeText={(value)=>{setBairro(value)}}
+            />
+            <TextInput
+                style={styles.inputPedido}
+                placeholder= "Complemento"
+                value={complemento}
+                onChangeText={(value)=>{setComplemento(value)}}
+            />
+
             <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
             <TouchableOpacity
-              style={{ ...styles.openButton, backgroundColor: "red" }}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
+              style={styles.btnCancelar}
+              onPress={cancelar}
             >
-              <Text style={styles.textStyle}>Cancelar</Text>
+              <Text style={styles.txtPedido}>Cancelar</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ ...styles.openButton, backgroundColor: "green" }}
+              style={styles.btnConfirmar}
               onPress={confirmar}
             >
-              <Text style={styles.textStyle}>Confirmar</Text>
+              <Text style={styles.txtPedido}>Confirmar</Text>
             </TouchableOpacity>
             </View>
+          </View>
+
           </View>
         </Modal>
 
