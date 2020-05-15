@@ -9,11 +9,13 @@ export default StyleSheet.create({
         backgroundColor: '#8A2BE2',
         height: 50,
         flexDirection: 'row',
+        justifyContent: 'space-around',
         alignItems: 'center'  
     },
     txtHeader:{
         fontSize: 25,
         color: '#fff',
+        justifyContent: 'flex-end',
     },
     cardProduto:{
         flexDirection: 'row',
@@ -38,7 +40,8 @@ export default StyleSheet.create({
     },
     qtd:{
         flexDirection: 'row', 
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     btnQtd:{
         height: 30,

@@ -8,24 +8,22 @@ import { View,
          TextInput,
          Linking
         } from 'react-native'
-
-import firebase from '../../database/firebase'
 import {useNavigation} from '@react-navigation/native'
+import firebase from '../../database/firebase'
+
 import heineken from '../../images/heineken.jpg'
 import styles from './styles'
-
 import Icon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
 Icon.loadFont()
-Icon.loadFont()
+Ionicons.loadFont()
     
 export default function Porao({route}){
-
-    const {item} = route.params
     const navigation = useNavigation()
+    const {item} = route.params
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
+    const [produtosCaixa, setProdutosCaixa] = useState([])
     const [nome, setNome] = useState('')
     const [endereco, setEndereco] = useState('')
     const [numero, setNumero] = useState('')
@@ -33,19 +31,25 @@ export default function Porao({route}){
     const [complemento, setComplemento] = useState('')
   
     const phone =  item.contato
+
     useEffect(()=> {
       async function loadingList(){
 
         await firebase.database().ref(item.key).on('value', (snapshot)=> {
           setProdutos([])
+          setProdutosCaixa([])
           snapshot.forEach((childItem) => {
             let list = {
               key: childItem.key,
               nome: childItem.val().nome,
               valor: parseFloat(childItem.val().valor),
               cont: parseFloat(childItem.val().cont),
+              contCaixa: parseFloat(childItem.val().contCaixa),
+              caixa: parseFloat(childItem.val().caixa),
+              qtdCaixa: parseFloat(childItem.val().qtdCaixa)
             };
             setProdutos(oldArray => [...oldArray, list]); 
+            setProdutosCaixa(oldArray => [...oldArray, list]); 
           });
           
         });
@@ -117,9 +121,25 @@ export default function Porao({route}){
     }
 
     function incrementProduto(item){
-      setProdutos(produtos.map(produto =>{
+      setProdutos(produtosCaixa.map(produto =>{
         if(item.key == produto.key){
           produto.cont++
+        }
+        return produto
+      }))
+    }
+    function incrementProdutoCaixa(item){
+      setProdutosCaixa(produtosCaixa.map(produto =>{
+        if(item.key == produto.key){
+          produto.contCaixa++
+        }
+        return produto
+      }))
+    }
+    function decrementarProdutoCaixa(item){
+      setProdutosCaixa(produtosCaixa.map(produto =>{
+        if((item.key == produto.key) && (produto.contCaixa != 0)){
+          produto.contCaixa--
         }
         return produto
       }))
@@ -130,14 +150,42 @@ export default function Porao({route}){
         return total
       },0)
     }
-    
+    function getTotalCaixa(){
+      return produtosCaixa.reduce((totalCaixa,produto)=>{
+        totalCaixa+= (produto.caixa * produto.contCaixa)
+        return totalCaixa
+      },0)
+    }
+    function getTotalUnidadeCaixa(){
+      return produtosCaixa.reduce((totalCaixa,produto)=>{
+        totalCaixa+= (produto.contCaixa * produto.qtdCaixa)
+        return totalCaixa
+      },0)
+    }
+    function getTotalUnidade(){
+      return produtos.reduce((totalCaixa,produto)=>{
+        totalCaixa+= (produto.cont)
+        return totalCaixa
+      },0)
+    }
+    function getQtdTotalProdutos(){
+      return getTotalUnidade() + getTotalUnidadeCaixa()
+    }
     return(
         <View style={styles.container}>
             <View style={styles.header}> 
               <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
-                  <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
+              <Text style={styles.iconHeader}> 
+                {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} 
+              </Text>
               </TouchableOpacity>
               <Text style={styles.txtHeader}>Delivery Miriense</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text>{<Icon name="shoppingcart" size={30} color="#fff"/>}</Text>
+                <Text style={{fontSize: 20, paddingLeft: 5, color: '#fff'}}>
+                  {getQtdTotalProdutos()}
+                </Text>
+              </View>
             </View>
             <FlatList
                 key= {item => item.key}
@@ -146,10 +194,28 @@ export default function Porao({route}){
                     <View style={styles.cardProduto}>
                     <Image source={heineken} style={styles.img}/>
                     <View style={styles.descProduto}>
-                    <Text style={styles.txtDesc}>{item.nome} </Text>
+                    <Text style={styles.txtDesc}>{item.nome}</Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
-                            <Text style={styles.txtDesc}>Quantidade:</Text>
+                            <Text style={styles.txtDesc}>Pacote {item.qtdCaixa}/uni:</Text>
+                            <View style={{flexDirection: 'row'}}>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProdutoCaixa(item)}>
+                                <Icon name="minuscircle" size={25} color="#ff0000"/>
+                                {/** <Text style={{fontSize:30}}> - </Text>*/}
+                            </TouchableOpacity>
+                            
+                            <Text>
+                              {item.contCaixa}
+                            </Text>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProdutoCaixa(item)}>
+                                <Icon name="pluscircle" size={25} color= '#008000'/>
+                                {/** <Text style={{fontSize:30}}> + </Text>*/}
+                            </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.qtd}>
+                            <Text style={styles.txtDesc}>Unidade:</Text>
+                            <View style={{flexDirection: 'row'}}>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
                                 <Icon name="minuscircle" size={25} color="#ff0000"/>
                                 {/** <Text style={{fontSize:30}}> - </Text>*/}
@@ -161,6 +227,7 @@ export default function Porao({route}){
                                 <Icon name="pluscircle" size={25} color= '#008000'/>
                                 {/** <Text style={{fontSize:30}}> + </Text>*/}
                             </TouchableOpacity>
+                            </View>
                         </View>
                     </View>               
                     </View>
@@ -170,7 +237,7 @@ export default function Porao({route}){
             
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>
-              TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())} </Text>
+              TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal() + getTotalCaixa())} </Text>
             <TouchableOpacity style={styles.btnPedir} onPress={()=>pedir()}>
                 <Text style={styles.txtBtnPedir}>Pedir</Text>
             </TouchableOpacity>    
