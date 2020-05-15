@@ -27,7 +27,8 @@ export default function Home(){
                         h_inicio: childItem.val().h_inicio,
                         h_fim: childItem.val().h_fim,
                         categoria: childItem.val().categoria,
-                        contato: childItem.val().contato
+                        contato: childItem.val().contato,
+                        img: childItem.val().img 
                     }
                     setVendedores(oldArray => [...oldArray, list])
                 })
@@ -56,7 +57,8 @@ export default function Home(){
                 data={vendedores}
                 renderItem= {({item})=>(
                     <View style={styles.cardVendedores}>
-                    <Image source={heineken} style={styles.img}/>
+                    <Image source={{uri:`${item.img}`}} style={styles.img}/>
+                    
                     <View style={styles.descEstabelecimento}>
                         <Text style={styles.txtDesc}>{item.nome} </Text>
                         <Text style={styles.txtDesc}>{item.endereco} </Text>
@@ -72,11 +74,10 @@ export default function Home(){
                         <TouchableOpacity style={styles.btn} onPress={()=>verProdutos(item)}>
                             <Text style={styles.txtBtn}>Ver Produtos {<Icon name= "arrow-right" size={20} color="#fff"/>}</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View>    
                     </View>               
                 )}
             />      
          </View>
-
     )
 }

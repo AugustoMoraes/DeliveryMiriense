@@ -15,6 +15,10 @@ export default StyleSheet.create({
         borderColor: '#000',
         elevation: 5
     },
+    img:{
+        height: 100,
+        width: 100,
+    },
     txtDesc:{
         fontSize: 20,
     },

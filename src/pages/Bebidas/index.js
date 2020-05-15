@@ -46,7 +46,8 @@ export default function Porao({route}){
               cont: parseFloat(childItem.val().cont),
               contCaixa: parseFloat(childItem.val().contCaixa),
               caixa: parseFloat(childItem.val().caixa),
-              qtdCaixa: parseFloat(childItem.val().qtdCaixa)
+              qtdCaixa: parseFloat(childItem.val().qtdCaixa),
+              img: childItem.val().img
             };
             setProdutos(oldArray => [...oldArray, list]); 
             setProdutosCaixa(oldArray => [...oldArray, list]); 
@@ -192,7 +193,7 @@ export default function Porao({route}){
                 data={produtos}
                 renderItem= {({item})=>(
                     <View style={styles.cardProduto}>
-                    <Image source={heineken} style={styles.img}/>
+                    <Image source={{uri: item.img}} style={styles.img}/>
                     <View style={styles.descProduto}>
                     <Text style={styles.txtDesc}>{item.nome}</Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
