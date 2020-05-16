@@ -15,7 +15,7 @@ export default StyleSheet.create({
     txtHeader:{
         fontSize: 25,
         color: '#fff',
-        justifyContent: 'flex-end',
+        //justifyContent: 'flex-end',
     },
     cardProduto:{
         flexDirection: 'row',
@@ -28,20 +28,22 @@ export default StyleSheet.create({
         elevation: 10,
     },
     descProduto:{
-        paddingHorizontal: 5
+        paddingHorizontal: 5,
     },
     txtDesc:{
         fontSize:17,
-        marginVertical: 10,
+        marginTop: 2,
     },
     img:{
-        height: 120,
-        width: 120,
+        height: 100,
+        width: 100,
     },
     qtd:{
         flexDirection: 'row', 
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        //backgroundColor: '#ddd',
+        marginVertical: 3,
     },
     btnQtd:{
         height: 30,

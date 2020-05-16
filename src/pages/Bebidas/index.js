@@ -11,7 +11,6 @@ import { View,
 import {useNavigation} from '@react-navigation/native'
 import firebase from '../../database/firebase'
 
-import heineken from '../../images/heineken.jpg'
 import styles from './styles'
 import Icon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -62,17 +61,20 @@ export default function Porao({route}){
     
     function confirmar(){
       if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
-       let pedido = montarMsg()
+       let pedido = montarPedidoUnidade()
        setModalVisible(false)
        zerarQtdProdutos()
        Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
-        alert('Preencha todos os campos!')
+        alert('Voce deve preencher o(s) campo(s) obrigatórios!')
       }
     }
     function zerarQtdProdutos(){
       produtos.map( produto =>{
         produto.cont = 0
+      })
+      produtosCaixa.map( produto =>{
+        produto.contCaixa = 0
       })
     }
     function isValidaProduto(){
@@ -82,27 +84,44 @@ export default function Porao({route}){
           conProduto++
         }
       })
-
       return conProduto > 0 ? true : false 
+    }
+    function isValidaProdutoCaixa(){
+      let conProdutoCaixa = 0
+      produtos.map( produto =>{
+        if(produto.contCaixa > 0){
+          conProdutoCaixa++
+        }
+      })
+
+      return conProdutoCaixa > 0 ? true : false 
     }
 
     
     function pedir(){
-      if(isValidaProduto()){
+      if(isValidaProduto() || isValidaProdutoCaixa()){
         setModalVisible(true)
       }else{
         alert('Nenhum Produto selecionado para compra!')
       }
     }
-    function montarMsg(){
+    function montarPedidoUnidade(){
         var msg =''
         produtos.map((childItem)=>{
         if(childItem.cont > 0){
             msg += `${childItem.cont} ${childItem.nome}\n`
-         }
-      })
-      return msg
+          }
+        })
+        produtosCaixa.map((item)=>{
+          if(item.contCaixa > 0){
+            msg += `${item.contCaixa} caixas de ${item.nome}\n`
+          }
+
+        })
+        return msg
     }
+
+
     function cancelar(){
       setModalVisible(false)
       setNome('')

@@ -9,6 +9,7 @@ export default StyleSheet.create({
         backgroundColor: '#8A2BE2',
         height: 50,
         flexDirection: 'row',
+        justifyContent: 'space-around',
         alignItems: 'center'  
     },
     txtHeader:{
@@ -33,8 +34,8 @@ export default StyleSheet.create({
         marginVertical: 10,
     },
     img:{
-        height: 120,
-        width: 120,
+        height: 110,
+        width: 110,
     },
     qtd:{
         flexDirection: 'row', 

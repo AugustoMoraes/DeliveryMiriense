@@ -44,6 +44,7 @@ export default function Porao({route}){
               nome: childItem.val().nome,
               valor: parseFloat(childItem.val().valor),
               cont: parseFloat(childItem.val().cont),
+              img: childItem.val().img
             };
             setProdutos(oldArray => [...oldArray, list]); 
           });
@@ -130,7 +131,13 @@ export default function Porao({route}){
         return total
       },0)
     }
-    
+    function getQtdTotalProdutos(){
+
+      return produtos.reduce( (total, produto) => {
+        total+= produto.cont
+        return total
+      },0)
+    }
     return(
         <View style={styles.container}>
             <View style={styles.header}> 
@@ -138,13 +145,19 @@ export default function Porao({route}){
                   <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
               </TouchableOpacity>
               <Text style={styles.txtHeader}>Delivery Miriense</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text>{<Icon name="shoppingcart" size={30} color="#fff"/>}</Text>
+                <Text style={{fontSize: 20, paddingLeft: 5, color: '#fff'}}>
+                  {getQtdTotalProdutos()}
+                </Text>
+              </View>
             </View>
             <FlatList
                 key= {item => item.key}
                 data={produtos}
                 renderItem= {({item})=>(
                     <View style={styles.cardProduto}>
-                    <Image source={heineken} style={styles.img}/>
+                    <Image source={{uri: item.img}} style={styles.img}/>
                     <View style={styles.descProduto}>
                     <Text style={styles.txtDesc}>{item.nome} </Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
