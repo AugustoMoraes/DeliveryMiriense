@@ -3,8 +3,6 @@ import {StyleSheet} from 'react-native'
 export default StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: '#999'
-
     },
     header:{
         backgroundColor: '#8A2BE2',
@@ -17,6 +15,12 @@ export default StyleSheet.create({
     txtHeader:{
         fontSize: 25,
         color: '#fff',
+    },
+    btnIconHeader:{
+        height: 60,
+        width: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     imgLogo:{
         flex: 1,

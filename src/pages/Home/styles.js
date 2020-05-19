@@ -16,6 +16,12 @@ export default StyleSheet.create({
         fontSize: 35,
         color: '#fff',
     },
+    btnIconHeader:{
+        height: 60,
+        width: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     cardVendedores:{
         flexDirection: 'row',
         marginVertical: 10,

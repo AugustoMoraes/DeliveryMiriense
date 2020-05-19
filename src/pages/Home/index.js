@@ -7,17 +7,20 @@ import firebase from '../../database/firebase'
 
 import Icon from 'react-native-vector-icons/Feather'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 Icon.loadFont()
+Ionicons.loadFont()
 MaterialIcons.loadFont()
-export default function Home(){
+export default function Home({route}){
 
+    const {item} = route.params
     const [vendedores, setVendedores] = useState([])
     const navigation = useNavigation()
 
     useEffect( () => {
         async function loadingVendedores(){
-            await firebase.database().ref('vendedores').on('value' , (snapshot)=>{
+            await firebase.database().ref('vendedores').orderByChild('categoria').equalTo(item.nome).on('value' , (snapshot)=>{
                 setVendedores([])
                 snapshot.forEach( (childItem) =>{
                     let list = {
@@ -53,7 +56,10 @@ export default function Home(){
     return(
         <View style={styles.container}>
             <View style={styles.header}> 
-              <Text style={styles.txtHeader}>Delivery Miriense</Text>
+                <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
+                  <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
+                </TouchableOpacity>
+                <Text style={styles.txtHeader}>Delivery Miriense</Text>
             </View>
             <FlatList
                 key= {item => item.key}
