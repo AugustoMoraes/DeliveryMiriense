@@ -3,35 +3,46 @@ import {StyleSheet} from 'react-native'
 export default StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: '#ddd'
+        backgroundColor: '#999'
+
     },
     header:{
         backgroundColor: '#8A2BE2',
-        height: 50,
+        height: 80,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center'  
+        alignItems: 'center',
+        borderBottomLeftRadius: 100
     },
     txtHeader:{
         fontSize: 25,
         color: '#fff',
+    },
+    imgLogo:{
+        flex: 1,
+        height: 500,
+    },
+    viewCard:{
+        flex: 1,
+        marginHorizontal: 10,
+        marginVertical: 10,
     },
     cardProduto:{
         flexDirection: 'row',
         marginVertical: 10,
         marginHorizontal: 10,
         backgroundColor: '#fff',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-around',
         alignItems: 'center',
         borderRadius: 10,
         elevation: 10,
     },
     descProduto:{
-        paddingHorizontal: 5
+        paddingHorizontal: 5,
+        width: '60%'
     },
     txtDesc:{
         fontSize:17,
-        marginVertical: 10,
     },
     img:{
         height: 110,
@@ -49,11 +60,12 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     viewTotPreco:{
-        height: 50,
+        height: 80,
         flexDirection: 'row',
         backgroundColor: '#8A2BE2',
         justifyContent: 'space-around',
         alignItems: 'center',        
+        borderTopRightRadius: 100,
     },
     txtTotPreco:{
         fontSize: 25,
@@ -94,7 +106,7 @@ export default StyleSheet.create({
     btnCancelar:{
         marginTop: 10, 
         marginBottom: 5,
-        height: 30,
+        height: 40,
         backgroundColor: '#DC143C',
         padding: 5,
         alignItems: 'center',
@@ -104,7 +116,7 @@ export default StyleSheet.create({
     btnConfirmar:{
         marginTop: 10, 
         marginBottom: 5,
-        height: 30,
+        height: 40,
         backgroundColor: '#008000',
         padding: 5,
         alignItems: 'center',
@@ -112,7 +124,7 @@ export default StyleSheet.create({
         borderRadius: 7
     },
     txtPedido:{
-        fontSize: 17,
+        fontSize: 22,
         color: '#fff'
     }
 })

@@ -6,21 +6,22 @@ import { View,
          Modal, 
          FlatList, 
          TextInput,
-         Linking
+         Linking,
+         ImageBackground
         } from 'react-native'
 
 import firebase from '../../database/firebase'
 import {useNavigation} from '@react-navigation/native'
-import heineken from '../../images/heineken.jpg'
 import styles from './styles'
 
+import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
 import Icon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 Icon.loadFont()
 Icon.loadFont()
     
-export default function Porao({route}){
+export default function Lanches({route}){
 
     const {item} = route.params
     const navigation = useNavigation()
@@ -31,7 +32,7 @@ export default function Porao({route}){
     const [numero, setNumero] = useState('')
     const [bairro, setBairro] = useState('')
     const [complemento, setComplemento] = useState('')
-  
+
     const phone =  item.contato
     useEffect(()=> {
       async function loadingList(){
@@ -44,6 +45,7 @@ export default function Porao({route}){
               nome: childItem.val().nome,
               valor: parseFloat(childItem.val().valor),
               cont: parseFloat(childItem.val().cont),
+              ingredientes: childItem.val().ingredientes,
               img: childItem.val().img
             };
             setProdutos(oldArray => [...oldArray, list]); 
@@ -59,9 +61,11 @@ export default function Porao({route}){
     function confirmar(){
       if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
        let pedido = montarMsg()
+       let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
        setModalVisible(false)
        zerarQtdProdutos()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+       zerarForm()
+       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
         alert('Preencha todos os campos!')
       }
@@ -70,6 +74,13 @@ export default function Porao({route}){
       produtos.map( produto =>{
         produto.cont = 0
       })
+    }
+    function zerarForm(){
+      setNome('')
+      setEndereco('')
+      setNumero('')
+      setBairro('')
+      setComplemento('')
     }
     function isValidaProduto(){
       let conProduto = 0
@@ -139,7 +150,8 @@ export default function Porao({route}){
       },0)
     }
     return(
-        <View style={styles.container}>
+      <View style={styles.container}>
+          
             <View style={styles.header}> 
               <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
                   <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
@@ -152,35 +164,38 @@ export default function Porao({route}){
                 </Text>
               </View>
             </View>
+            <ImageBackground source={image} style={styles.imgLogo}>
+            <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
                 data={produtos}
                 renderItem= {({item})=>(
                     <View style={styles.cardProduto}>
+                    <View style={{justifyContent: 'center'}}>
                     <Image source={{uri: item.img}} style={styles.img}/>
+                    </View>
                     <View style={styles.descProduto}>
                     <Text style={styles.txtDesc}>{item.nome} </Text>
+                    <Text style={[styles.txtDesc,{color: '#999'}]}>{item.ingredientes} </Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>Quantidade:</Text>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
                                 <Icon name="minuscircle" size={25} color="#ff0000"/>
-                                {/** <Text style={{fontSize:30}}> - </Text>*/}
                             </TouchableOpacity>
                             <Text>
                               {item.cont}
                             </Text>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProduto(item)}>
                                 <Icon name="pluscircle" size={25} color= '#008000'/>
-                                {/** <Text style={{fontSize:30}}> + </Text>*/}
                             </TouchableOpacity>
                         </View>
                     </View>               
-                    </View>
-                    
+                    </View>     
                 )}
             />      
-            
+            </View>
+            </ImageBackground>
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>
               TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())} </Text>
@@ -188,7 +203,7 @@ export default function Porao({route}){
                 <Text style={styles.txtBtnPedir}>Pedir</Text>
             </TouchableOpacity>    
             </View>
-           
+            
         <Modal
         animationType="slide"
         visible={modalVisible}
@@ -250,7 +265,7 @@ export default function Porao({route}){
 
           </View>
         </Modal>
-
+         
         </View>
     )
 }

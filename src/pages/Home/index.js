@@ -43,7 +43,7 @@ export default function Home(){
             if(item.categoria == 'bebidas'){
                 navigation.navigate('Bebidas', {item})
             }else{
-                navigation.navigate('Porao', {item})
+                navigation.navigate('Lanches', {item})
             }
         }else{
             alert('Nosso Delivery está encerrado por hoje, Voltamos amanha!')
@@ -52,13 +52,17 @@ export default function Home(){
 
     return(
         <View style={styles.container}>
+            <View style={styles.header}> 
+              <Text style={styles.txtHeader}>Delivery Miriense</Text>
+            </View>
             <FlatList
                 key= {item => item.key}
                 data={vendedores}
                 renderItem= {({item})=>(
                     <View style={styles.cardVendedores}>
-                    <Image source={{uri:`${item.img}`}} style={styles.img}/>
-                    
+                    <View style={{justifyContent: 'center'}}> 
+                        <Image source={{uri:`${item.img}`}} style={styles.img}/>
+                    </View>
                     <View style={styles.descEstabelecimento}>
                         <Text style={styles.txtDesc}>{item.nome} </Text>
                         <Text style={styles.txtDesc}>{item.endereco} </Text>
@@ -69,15 +73,20 @@ export default function Home(){
                             <Text style={styles.txtDesc}> às </Text>
                             <Text style={styles.txtDesc}> {item.h_fim} </Text>
                         </View>
-                    </View>
                     <View style={styles.viewBtn}> 
                         <TouchableOpacity style={styles.btn} onPress={()=>verProdutos(item)}>
                             <Text style={styles.txtBtn}>Ver Produtos {<Icon name= "arrow-right" size={20} color="#fff"/>}</Text>
                         </TouchableOpacity>
                     </View>    
+                    </View>
                     </View>               
                 )}
-            />      
+            />
+            <View style={styles.viewFooter}>
+                <Text style={styles.txtFooter}>
+                    CRIADO POR SUPER INFORMÁTICA 
+                </Text>
+            </View>
          </View>
     )
 }

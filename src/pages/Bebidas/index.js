@@ -6,18 +6,20 @@ import { View,
          Modal, 
          FlatList, 
          TextInput,
-         Linking
+         Linking,
+         ImageBackground
         } from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import firebase from '../../database/firebase'
 
 import styles from './styles'
+import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
 import Icon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 Icon.loadFont()
 Ionicons.loadFont()
     
-export default function Porao({route}){
+export default function Bebidas({route}){
     const navigation = useNavigation()
     const {item} = route.params
     const [modalVisible, setModalVisible] = useState(false)
@@ -28,7 +30,7 @@ export default function Porao({route}){
     const [numero, setNumero] = useState('')
     const [bairro, setBairro] = useState('')
     const [complemento, setComplemento] = useState('')
-  
+
     const phone =  item.contato
 
     useEffect(()=> {
@@ -62,9 +64,11 @@ export default function Porao({route}){
     function confirmar(){
       if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
        let pedido = montarPedidoUnidade()
+       let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
        setModalVisible(false)
        zerarQtdProdutos()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+       zerarForm()
+       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir:\n\n${pedido}Total: ${total}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
         alert('Voce deve preencher o(s) campo(s) obrigatórios!')
       }
@@ -76,6 +80,13 @@ export default function Porao({route}){
       produtosCaixa.map( produto =>{
         produto.contCaixa = 0
       })
+    }
+    function zerarForm(){
+      setNome('')
+      setEndereco('')
+      setNumero('')
+      setBairro('')
+      setComplemento('')
     }
     function isValidaProduto(){
       let conProduto = 0
@@ -189,8 +200,9 @@ export default function Porao({route}){
       },0)
     }
     function getQtdTotalProdutos(){
-      return getTotalUnidade() + getTotalUnidadeCaixa()
+      return getTotalUnidade() //+ getTotalUnidadeCaixa()
     }
+
     return(
         <View style={styles.container}>
             <View style={styles.header}> 
@@ -207,6 +219,8 @@ export default function Porao({route}){
                 </Text>
               </View>
             </View>
+            <ImageBackground source={image} style={styles.imgLogo}>
+            <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
                 data={produtos}
@@ -216,12 +230,12 @@ export default function Porao({route}){
                     <View style={styles.descProduto}>
                     <Text style={styles.txtDesc}>{item.nome}</Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
+                       {/** 
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>Pacote {item.qtdCaixa}/uni:</Text>
                             <View style={{flexDirection: 'row'}}>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProdutoCaixa(item)}>
                                 <Icon name="minuscircle" size={25} color="#ff0000"/>
-                                {/** <Text style={{fontSize:30}}> - </Text>*/}
                             </TouchableOpacity>
                             
                             <Text>
@@ -229,23 +243,21 @@ export default function Porao({route}){
                             </Text>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProdutoCaixa(item)}>
                                 <Icon name="pluscircle" size={25} color= '#008000'/>
-                                {/** <Text style={{fontSize:30}}> + </Text>*/}
                             </TouchableOpacity>
                             </View>
                         </View>
+                      */}
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>Unidade:</Text>
-                            <View style={{flexDirection: 'row'}}>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
                                 <Icon name="minuscircle" size={25} color="#ff0000"/>
-                                {/** <Text style={{fontSize:30}}> - </Text>*/}
                             </TouchableOpacity>
                             <Text>
                               {item.cont}
                             </Text>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProduto(item)}>
                                 <Icon name="pluscircle" size={25} color= '#008000'/>
-                                {/** <Text style={{fontSize:30}}> + </Text>*/}
                             </TouchableOpacity>
                             </View>
                         </View>
@@ -254,10 +266,11 @@ export default function Porao({route}){
                     
                 )}
             />      
-            
+            </View>
+            </ImageBackground>
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>
-              TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal() + getTotalCaixa())} </Text>
+              TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())} </Text>
             <TouchableOpacity style={styles.btnPedir} onPress={()=>pedir()}>
                 <Text style={styles.txtBtnPedir}>Pedir</Text>
             </TouchableOpacity>    
@@ -273,14 +286,18 @@ export default function Porao({route}){
             <TextInput
               style={styles.inputPedido}
               returnKeyType = 'next'
-              enablesReturnKeyAutomatically = {true}
+              //enablesReturnKeyAutomatically = {true}
+              //ref = { input => { inputNome = input}}
               placeholder= "Digite seu nome"
               value={nome}
               onChangeText={(value)=>{setNome(value)}}
+              //onSubmitEditing={() => { this.input_2.focus(); }}
+              //blurOnSubmit={false}
             />
             <View style={{flexDirection: 'row'}}>
               <TextInput
                 style={[styles.inputPedido,{marginRight: 10, width: '80%'}]}
+                //ref={(input) => { this.input_2 = input; }}
                 placeholder= "Endereço"
                 value={endereco}
                 onChangeText={(value)=>{setEndereco(value)}}

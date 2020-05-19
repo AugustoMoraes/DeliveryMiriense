@@ -7,15 +7,46 @@ export default StyleSheet.create({
     },
     header:{
         backgroundColor: '#8A2BE2',
-        height: 50,
+        height: 80,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center'  
+        alignItems: 'center',
+        borderBottomLeftRadius: 100
     },
     txtHeader:{
         fontSize: 25,
         color: '#fff',
         //justifyContent: 'flex-end',
+    },
+    btnIconHeader:{
+        height: 60,
+        width: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    viewBtnProdutos:{
+        backgroundColor: '#8A2BE2',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 5
+    },
+    btnProduto:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 7
+    },
+    txtBtnProduto:{
+        color: '#fff',
+        fontSize: 20
+    },
+    viewCard:{
+        flex: 1,
+        marginHorizontal: 10,
+        marginVertical: 10,
+    },
+    imgLogo:{
+        flex: 1,
+        height: 500,
     },
     cardProduto:{
         flexDirection: 'row',
@@ -53,11 +84,12 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     viewTotPreco:{
-        height: 50,
+        height: 80,
         flexDirection: 'row',
         backgroundColor: '#8A2BE2',
         justifyContent: 'space-around',
         alignItems: 'center',        
+        borderTopRightRadius: 100,
     },
     txtTotPreco:{
         fontSize: 25,
@@ -98,7 +130,7 @@ export default StyleSheet.create({
     btnCancelar:{
         marginTop: 10, 
         marginBottom: 5,
-        height: 30,
+        height: 40,
         backgroundColor: '#DC143C',
         padding: 5,
         alignItems: 'center',
@@ -108,7 +140,7 @@ export default StyleSheet.create({
     btnConfirmar:{
         marginTop: 10, 
         marginBottom: 5,
-        height: 30,
+        height: 40,
         backgroundColor: '#008000',
         padding: 5,
         alignItems: 'center',
@@ -116,7 +148,7 @@ export default StyleSheet.create({
         borderRadius: 7
     },
     txtPedido:{
-        fontSize: 17,
+        fontSize: 22,
         color: '#fff'
     }
 })
