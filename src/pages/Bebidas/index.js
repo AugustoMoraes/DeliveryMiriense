@@ -36,7 +36,7 @@ export default function Bebidas({route}){
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).orderByChild('nome').on('value', (snapshot)=> {
           setProdutos([])
           setProdutosCaixa([])
           snapshot.forEach((childItem) => {

@@ -18,6 +18,8 @@ export default function Categorias(){
                     let list = {
                         key: childItem.key,
                         nome: childItem.val().nome,
+                        img: childItem.val().img,
+                        
                     }
                     setCategorias(oldArray => [...oldArray, list])
                 })
@@ -42,7 +44,7 @@ export default function Categorias(){
                 renderItem = { ({item}) => (
                     <View style={styles.cardCategoria}>
                         <TouchableOpacity onPress={()=>verListVendedores(item)}>
-                            <Image source={imagem} style={styles.imgCard}/>
+                            <Image source={{uri:`${item.img}`}} style={styles.imgCard}/>
                         </TouchableOpacity>                       
                     </View>
                 )}

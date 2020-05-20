@@ -37,7 +37,7 @@ export default function Lanches({route}){
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).orderByChild('nome').on('value', (snapshot)=> {
           setProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
