@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {View,Text, FlatList, Image, TouchableOpacity} from 'react-native'
+import {View,Text, FlatList, Image, TouchableOpacity, Linking} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import firebase from 'firebase'
 import styles from './styles'
@@ -31,6 +31,9 @@ export default function Categorias(){
     function verListVendedores(item){
         navigation.navigate('Home', {item})
     }
+    function contato(){
+        Linking.openURL(`whatsapp://send?text=Obrigado pelo preferência, como podemos ajudar? &phone=5591998189662`)
+    }
     return(
         <View style={styles.container}>
             <View style={styles.header}> 
@@ -49,6 +52,16 @@ export default function Categorias(){
                     </View>
                 )}
             />
+            <View style={styles.viewFooter}>
+                <Text style={styles.txtFooter}>
+                    Se  você deseja criar um sistema para facilitar seu trabalho, entre em contato:
+                </Text>
+                    <TouchableOpacity style={styles.btnContato} onPress={contato}>
+                        <Text style={styles.txtContato}>
+                            Contato
+                        </Text>
+                    </TouchableOpacity>
+            </View>
         </View>
     )
 }

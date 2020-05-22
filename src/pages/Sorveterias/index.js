@@ -19,12 +19,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 Icon.loadFont()
 Ionicons.loadFont()
     
-export default function Bebidas({route}){
+export default function Sorveterias({route}){
     const navigation = useNavigation()
     const {item} = route.params
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
-    const [produtosCaixa, setProdutosCaixa] = useState([])
     const [nome, setNome] = useState('')
     const [endereco, setEndereco] = useState('')
     const [numero, setNumero] = useState('')
@@ -35,10 +34,8 @@ export default function Bebidas({route}){
 
     useEffect(()=> {
       async function loadingList(){
-
-        await firebase.database().ref(item.key).orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(`${item.key}/tamanho`).on('value', (snapshot)=> {
           setProdutos([])
-          setProdutosCaixa([])
           snapshot.forEach((childItem) => {
             let list = {
               key: childItem.key,
@@ -48,7 +45,6 @@ export default function Bebidas({route}){
               img: childItem.val().img
             };
             setProdutos(oldArray => [...oldArray, list]); 
-            setProdutosCaixa(oldArray => [...oldArray, list]); 
           });
           
         });

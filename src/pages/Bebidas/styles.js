@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native'
 export default StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: '#ddd'
+        backgroundColor: '#999'
     },
     header:{
         backgroundColor: '#8A2BE2',
@@ -57,6 +57,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         elevation: 10,
+        opacity: 0.9
     },
     descProduto:{
         paddingHorizontal: 5,

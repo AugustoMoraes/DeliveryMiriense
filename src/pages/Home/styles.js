@@ -2,7 +2,8 @@ import {StyleSheet} from 'react-native'
 
 export default StyleSheet.create({
     container:{
-        flex: 1
+        flex: 1,
+        backgroundColor: '#999'
     },
     header:{
         backgroundColor: '#8A2BE2',
@@ -22,6 +23,10 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    imgLogo:{
+        flex: 1,
+        height: 500,
+    },
     cardVendedores:{
         flexDirection: 'row',
         marginVertical: 10,
@@ -33,7 +38,8 @@ export default StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         borderColor: '#000',
-        elevation: 5
+        elevation: 5,
+        opacity: 0.9
     },
     img:{
         height: 130,

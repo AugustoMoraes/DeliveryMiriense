@@ -2,7 +2,8 @@ import {StyleSheet} from 'react-native'
 
 export default StyleSheet.create({
     container:{
-        flex: 1
+        flex: 1,
+        backgroundColor: '#999'
     },
     header:{
         backgroundColor: '#8A2BE2',
@@ -10,7 +11,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        borderBottomLeftRadius: 100
+        //borderBottomLeftRadius: 100
     },
     txtHeader:{
         fontSize: 35,
@@ -29,5 +30,25 @@ export default StyleSheet.create({
         width: '100%',
         height: '100%',
         borderRadius: 7
+    },
+    viewFooter:{
+        backgroundColor: '#8A2BE2',
+        alignItems: 'center',        
+    },
+    txtFooter:{
+        paddingHorizontal: 15,
+        fontSize: 17,
+        color: '#fff',
+    },
+    btnContato:{
+        backgroundColor: '#fff',
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    txtContato:{
+        fontSize: 20,
+        color: '#8A2BE2'
     }
 })

@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
-import {View, Text, Image, TouchableOpacity, FlatList} from 'react-native'
+import {View, Text, Image, TouchableOpacity, FlatList,ImageBackground} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
-import heineken from '../../images/heineken.jpg'
 import styles from './styles'
 import firebase from '../../database/firebase'
 
+import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
 import Icon from 'react-native-vector-icons/Feather'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -20,6 +20,7 @@ export default function Home({route}){
 
     useEffect( () => {
         async function loadingVendedores(){
+            console.log(item.nome)
             await firebase.database().ref('vendedores').orderByChild('categoria').equalTo(item.nome).on('value' , (snapshot)=>{
                 setVendedores([])
                 snapshot.forEach( (childItem) =>{
@@ -48,7 +49,8 @@ export default function Home({route}){
             }else{
                 navigation.navigate('Lanches', {item})
             }
-        }else{
+        }
+        else{
             alert('Nosso Delivery está encerrado por hoje, Voltamos amanha!')
         }
     }
@@ -61,6 +63,7 @@ export default function Home({route}){
                 </TouchableOpacity>
                 <Text style={styles.txtHeader}>Delivery Miriense</Text>
             </View>
+            <ImageBackground source={image} style={styles.imgLogo}>
             <FlatList
                 key= {item => item.key}
                 data={vendedores}
@@ -88,11 +91,7 @@ export default function Home({route}){
                     </View>               
                 )}
             />
-            <View style={styles.viewFooter}>
-                <Text style={styles.txtFooter}>
-                    CRIADO POR SUPER INFORMÁTICA 
-                </Text>
-            </View>
+            </ImageBackground>
          </View>
     )
 }
