@@ -46,8 +46,10 @@ export default function Home({route}){
         if(horaAtual > item.h_inicio && horaAtual < item.h_fim){
             if(item.categoria == 'bebidas'){
                 navigation.navigate('Bebidas', {item})
-            }else{
+            }else if(item.categoria == 'lanches'){
                 navigation.navigate('Lanches', {item})
+            }else{
+                navigation.navigate('Sorveterias', {item})
             }
         }
         else{

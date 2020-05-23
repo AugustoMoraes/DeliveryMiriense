@@ -7,7 +7,8 @@ import { View,
          FlatList, 
          TextInput,
          Linking,
-         ImageBackground
+         ImageBackground,
+         Picker
         } from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import firebase from '../../database/firebase'
@@ -24,6 +25,9 @@ export default function Sorveterias({route}){
     const {item} = route.params
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
+    const [sabores, setSabores] = useState([])
+    const [saborSelected, setSaborSelected] = useState([])
+    const [produtosCaixa, setProdutosCaixa] = useState([])
     const [nome, setNome] = useState('')
     const [endereco, setEndereco] = useState('')
     const [numero, setNumero] = useState('')
@@ -34,7 +38,8 @@ export default function Sorveterias({route}){
 
     useEffect(()=> {
       async function loadingList(){
-        await firebase.database().ref(`${item.key}/tamanho`).on('value', (snapshot)=> {
+
+        await firebase.database().ref(item.key).child('tamanho').orderByChild('nome').on('value', (snapshot)=> {
           setProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
@@ -49,9 +54,23 @@ export default function Sorveterias({route}){
           
         });
       }
+      async function loadingListSabores(){
+
+        await firebase.database().ref(item.key).child('sorvetes').orderByChild('nome').on('value', (snapshot)=> {
+          setSabores([])
+          snapshot.forEach((childItem) => {
+            let list = {
+              key: childItem.key,
+              nome: childItem.val().nome,
+            };
+            setSabores(oldArray => [...oldArray, list]); 
+          });
+          
+        });
+      }
       
       loadingList();
-      
+      loadingListSabores();      
     }, []);
     
     function confirmar(){
@@ -212,6 +231,18 @@ export default function Sorveterias({route}){
                     <View style={styles.descProduto}>
                     <Text style={styles.txtDesc}>{item.nome}</Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
+                    <Picker
+                      selectedValue={saborSelected}
+                      style={{ height: 50, width: 150 }}
+                      onValueChange={(itemValue, itemIndex) => setSaborSelected(itemValue)}
+                    >
+                      {
+                        sabores.map( (sabor,i) =>{
+                          return <Picker.Item key={i.key} label={sabor.nome} value={sabor.nome} />
+                          
+                        })
+                      }
+                    </Picker>
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>Unidade:</Text>
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>

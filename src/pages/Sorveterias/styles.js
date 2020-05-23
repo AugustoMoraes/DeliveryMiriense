@@ -1,271 +1,155 @@
-import React,{useState, useEffect} from 'react'
-import { View, 
-         Text, 
-         Image, 
-         TouchableOpacity, 
-         Modal, 
-         FlatList, 
-         TextInput,
-         Linking,
-         ImageBackground
-        } from 'react-native'
+import {StyleSheet} from 'react-native'
 
-import firebase from '../../database/firebase'
-import {useNavigation} from '@react-navigation/native'
-import styles from './styles'
-
-import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
-import Icon from 'react-native-vector-icons/AntDesign'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-
-Icon.loadFont()
-Icon.loadFont()
-    
-export default function Lanches({route}){
-
-    const {item} = route.params
-    const navigation = useNavigation()
-    const [modalVisible, setModalVisible] = useState(false)
-    const [produtos, setProdutos] = useState([])
-    const [nome, setNome] = useState('')
-    const [endereco, setEndereco] = useState('')
-    const [numero, setNumero] = useState('')
-    const [bairro, setBairro] = useState('')
-    const [complemento, setComplemento] = useState('')
-
-    const phone =  item.contato
-    useEffect(()=> {
-      async function loadingList(){
-
-        await firebase.database().ref(item.key).orderByChild('nome').on('value', (snapshot)=> {
-          setProdutos([])
-          snapshot.forEach((childItem) => {
-            let list = {
-              key: childItem.key,
-              nome: childItem.val().nome,
-              valor: parseFloat(childItem.val().valor),
-              cont: parseFloat(childItem.val().cont),
-              ingredientes: childItem.val().ingredientes,
-              img: childItem.val().img
-            };
-            setProdutos(oldArray => [...oldArray, list]); 
-          });
-          
-        });
-      }
-      
-      loadingList();
-      
-    }, []);
-    
-    function confirmar(){
-      if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
-       let pedido = montarMsg()
-       let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
-       setModalVisible(false)
-       zerarQtdProdutos()
-       zerarForm()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
-      }else{
-        alert('Preencha todos os campos!')
-      }
+export default StyleSheet.create({
+    container:{
+        flex: 1,
+        backgroundColor: '#999'
+    },
+    header:{
+        backgroundColor: '#8A2BE2',
+        height: 80,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        borderBottomLeftRadius: 100
+    },
+    txtHeader:{
+        fontSize: 25,
+        color: '#fff',
+        //justifyContent: 'flex-end',
+    },
+    btnIconHeader:{
+        height: 60,
+        width: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    viewBtnProdutos:{
+        backgroundColor: '#8A2BE2',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 5
+    },
+    btnProduto:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 7
+    },
+    txtBtnProduto:{
+        color: '#fff',
+        fontSize: 20
+    },
+    viewCard:{
+        flex: 1,
+        marginHorizontal: 10,
+        marginVertical: 10,
+    },
+    imgLogo:{
+        flex: 1,
+        height: 500,
+    },
+    cardProduto:{
+        flexDirection: 'row',
+        marginVertical: 10,
+        marginHorizontal: 10,
+        backgroundColor: '#fff',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        borderRadius: 10,
+        elevation: 10,
+        opacity: 0.9
+    },
+    descProduto:{
+        paddingHorizontal: 5,
+    },
+    txtDesc:{
+        fontSize:17,
+        marginTop: 2,
+    },
+    img:{
+        height: 100,
+        width: 100,
+    },
+    qtd:{
+        flexDirection: 'row', 
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        //backgroundColor: '#ddd',
+        marginVertical: 3,
+    },
+    btnQtd:{
+        height: 30,
+        width: 30,
+        marginHorizontal: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    viewTotPreco:{
+        height: 80,
+        flexDirection: 'row',
+        backgroundColor: '#8A2BE2',
+        justifyContent: 'space-around',
+        alignItems: 'center',        
+        borderTopRightRadius: 100,
+    },
+    txtTotPreco:{
+        fontSize: 25,
+        color: '#fff',
+        padding:3
+    },  
+    btnPedir:{
+        //backgroundColor: '#8A2BE2',
+        height: 30,
+        width: 80,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    txtBtnPedir:{
+        fontSize: 25,
+        textTransform: 'uppercase',
+        color: '#fff'
+    },
+    modalView: {
+        backgroundColor: "#8A2BE2",
+        borderTopRightRadius: 30,
+        borderTopLeftRadius: 30,
+        padding: 10,
+    },
+    viewTxtProdutos:{
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    txtProdutos:{
+        fontSize: 20,
+    },
+    inputPedido:{
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        padding: 5,
+        marginBottom:10
+    },
+    btnCancelar:{
+        marginTop: 10, 
+        marginBottom: 5,
+        height: 40,
+        backgroundColor: '#DC143C',
+        padding: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 7
+    },
+    btnConfirmar:{
+        marginTop: 10, 
+        marginBottom: 5,
+        height: 40,
+        backgroundColor: '#008000',
+        padding: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 7
+    },
+    txtPedido:{
+        fontSize: 22,
+        color: '#fff'
     }
-    function zerarQtdProdutos(){
-      produtos.map( produto =>{
-        produto.cont = 0
-      })
-    }
-    function zerarForm(){
-      setNome('')
-      setEndereco('')
-      setNumero('')
-      setBairro('')
-      setComplemento('')
-    }
-    function isValidaProduto(){
-      let conProduto = 0
-      produtos.map( produto =>{
-        if(produto.cont > 0){
-          conProduto++
-        }
-      })
-
-      return conProduto > 0 ? true : false 
-    }
-
-    
-    function pedir(){
-      if(isValidaProduto()){
-        setModalVisible(true)
-      }else{
-        alert('Nenhum Produto selecionado para compra!')
-      }
-    }
-    function montarMsg(){
-        var msg =''
-        produtos.map((childItem)=>{
-        if(childItem.cont > 0){
-            msg += `${childItem.cont} ${childItem.nome}\n`
-         }
-      })
-      return msg
-    }
-    function cancelar(){
-      setModalVisible(false)
-      setNome('')
-      setEndereco('')
-      setComplemento('')
-      setBairro('')
-      setNumero('')
-    }
-
-    function decrementarProduto(item){
-      setProdutos(produtos.map(produto =>{
-        if((item.key == produto.key) && (produto.cont != 0)){
-          produto.cont--
-        }
-        return produto
-      }))
-    }
-
-    function incrementProduto(item){
-      setProdutos(produtos.map(produto =>{
-        if(item.key == produto.key){
-          produto.cont++
-        }
-        return produto
-      }))
-    }
-    function getTotal(){
-      return produtos.reduce((total,produto)=>{
-        total+= (produto.valor * produto.cont)
-        return total
-      },0)
-    }
-    function getQtdTotalProdutos(){
-
-      return produtos.reduce( (total, produto) => {
-        total+= produto.cont
-        return total
-      },0)
-    }
-    return(
-      <View style={styles.container}>
-          
-            <View style={styles.header}> 
-              <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
-                  <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
-              </TouchableOpacity>
-              <Text style={styles.txtHeader}>Delivery Miriense</Text>
-              <View style={{flexDirection: 'row'}}>
-                <Text>{<Icon name="shoppingcart" size={30} color="#fff"/>}</Text>
-                <Text style={{fontSize: 20, paddingLeft: 5, color: '#fff'}}>
-                  {getQtdTotalProdutos()}
-                </Text>
-              </View>
-            </View>
-            <ImageBackground source={image} style={styles.imgLogo}>
-            <View style={styles.viewCard}>
-            <FlatList
-                key= {item => item.key}
-                data={produtos}
-                renderItem= {({item})=>(
-                    <View style={styles.cardProduto}>
-                    <View style={{justifyContent: 'center'}}>
-                    <Image source={{uri: item.img}} style={styles.img}/>
-                    </View>
-                    <View style={styles.descProduto}>
-                    <Text style={styles.txtDesc}>{item.nome} </Text>
-                    <Text style={[styles.txtDesc,{color: '#999'}]}>{item.ingredientes} </Text>
-                    <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
-                        <View style={styles.qtd}>
-                            <Text style={styles.txtDesc}>Quantidade:</Text>
-                            <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
-                                <Icon name="minuscircle" size={25} color="#ff0000"/>
-                            </TouchableOpacity>
-                            <Text>
-                              {item.cont}
-                            </Text>
-                            <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProduto(item)}>
-                                <Icon name="pluscircle" size={25} color= '#008000'/>
-                            </TouchableOpacity>
-                        </View>
-                    </View>               
-                    </View>     
-                )}
-            />      
-            </View>
-            </ImageBackground>
-            <View style={styles.viewTotPreco}>
-            <Text style={styles.txtTotPreco}>
-              TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())} </Text>
-            <TouchableOpacity style={styles.btnPedir} onPress={()=>pedir()}>
-                <Text style={styles.txtBtnPedir}>Pedir</Text>
-            </TouchableOpacity>    
-            </View>
-            
-        <Modal
-        animationType="slide"
-        visible={modalVisible}
-        transparent= {true}
-        >
-          <View style={{flex: 1, justifyContent: 'flex-end'}}>
-          <View style={styles.modalView}>
-            <TextInput
-              style={styles.inputPedido}
-              returnKeyType = 'next'
-              enablesReturnKeyAutomatically = {true}
-              placeholder= "Digite seu nome"
-              value={nome}
-              onChangeText={(value)=>{setNome(value)}}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <TextInput
-                style={[styles.inputPedido,{marginRight: 10, width: '80%'}]}
-                placeholder= "Endereço"
-                value={endereco}
-                onChangeText={(value)=>{setEndereco(value)}}
-              />
-              <TextInput
-                style={styles.inputPedido}
-                placeholder= "Numero"
-                keyboardType= 'numeric'
-                value={numero}
-                onChangeText={(value)=>{setNumero(value)}}
-              />
-            </View>
-            <TextInput
-                style={styles.inputPedido}
-                placeholder= "Bairro"
-                value={bairro}
-                onChangeText={(value)=>{setBairro(value)}}
-            />
-            <TextInput
-                style={styles.inputPedido}
-                placeholder= "Complemento (OPICIONAL)"
-                value={complemento}
-                onChangeText={(value)=>{setComplemento(value)}}
-            />
-
-            <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
-            <TouchableOpacity
-              style={styles.btnCancelar}
-              onPress={cancelar}
-            >
-              <Text style={styles.txtPedido}>Cancelar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btnConfirmar}
-              onPress={confirmar}
-            >
-              <Text style={styles.txtPedido}>Confirmar</Text>
-            </TouchableOpacity>
-            </View>
-          </View>
-
-          </View>
-        </Modal>
-         
-        </View>
-    )
-}
+})
