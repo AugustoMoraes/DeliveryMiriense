@@ -44,10 +44,14 @@ export default function Home({route}){
     function verProdutos(item){
         let horaAtual = new Date().getHours() +':'+ new Date().getMinutes()
         if(horaAtual > item.h_inicio && horaAtual < item.h_fim){
-            if(item.categoria == 'bebidas'){
+            if(item.categoria == 'bebidas' || item.categoria == 'agua_gas'){
                 navigation.navigate('Bebidas', {item})
             }else if(item.categoria == 'lanches'){
                 navigation.navigate('Lanches', {item})
+            }else if(item.categoria == 'acai'){
+                navigation.navigate('Acai', {item})
+            }else if(item.categoria == 'pizza'){
+                navigation.navigate('Pizzas', {item})
             }else{
                 navigation.navigate('Sorveterias', {item})
             }
