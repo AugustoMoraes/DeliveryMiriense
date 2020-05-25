@@ -36,13 +36,14 @@ export default function Acai({route}){
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setProdutos([])
           setProdutosCaixa([])
           snapshot.forEach((childItem) => {
             let list = {
               key: childItem.key,
               nome: childItem.val().nome,
+              disponivel: childItem.val().disponivel,
               valor: parseFloat(childItem.val().valor),
               cont: parseFloat(childItem.val().cont),
               img: childItem.val().img

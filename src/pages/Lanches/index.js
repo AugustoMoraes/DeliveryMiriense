@@ -156,7 +156,7 @@ export default function Lanches({route}){
               <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
                   <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
               </TouchableOpacity>
-              <Text style={styles.txtHeader}>Delivery Miriense</Text>
+              <Text style={styles.txtHeader}>{item.nome}</Text>
               <View style={{flexDirection: 'row'}}>
                 <Text>{<Icon name="shoppingcart" size={30} color="#fff"/>}</Text>
                 <Text style={{fontSize: 20, paddingLeft: 5, color: '#fff'}}>

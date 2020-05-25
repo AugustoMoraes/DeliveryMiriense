@@ -16,6 +16,7 @@ import styles from './styles'
 import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
 import Icon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+
 Icon.loadFont()
 Ionicons.loadFont()
     
@@ -24,7 +25,6 @@ export default function Bebidas({route}){
     const {item} = route.params
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
-    const [produtosCaixa, setProdutosCaixa] = useState([])
     const [nome, setNome] = useState('')
     const [endereco, setEndereco] = useState('')
     const [numero, setNumero] = useState('')
@@ -36,19 +36,18 @@ export default function Bebidas({route}){
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).orderByChild('disponivel').equalTo('true').orderByChild('nome').on('value', (snapshot)=> {
           setProdutos([])
-          setProdutosCaixa([])
           snapshot.forEach((childItem) => {
             let list = {
               key: childItem.key,
               nome: childItem.val().nome,
+              disponivel: childItem.val().disponivel,
               valor: parseFloat(childItem.val().valor),
               cont: parseFloat(childItem.val().cont),
               img: childItem.val().img
             };
             setProdutos(oldArray => [...oldArray, list]); 
-            setProdutosCaixa(oldArray => [...oldArray, list]); 
           });
           
         });
@@ -60,22 +59,19 @@ export default function Bebidas({route}){
     
     function confirmar(){
       if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
-       let pedido = montarPedidoUnidade()
-       let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
-       setModalVisible(false)
-       zerarQtdProdutos()
-       zerarForm()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir:\n\n${pedido}Total: ${total}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+        let pedido = montarPedidoUnidade()
+        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
+        setModalVisible(false)
+        zerarQtdProdutos()
+        zerarForm()
+        Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir:\n\n${pedido}Total: ${total}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
-        alert('Voce deve preencher o(s) campo(s) obrigatórios!')
+          alert('Voce deve preencher o(s) campo(s) obrigatórios!')
       }
     }
     function zerarQtdProdutos(){
       produtos.map( produto =>{
         produto.cont = 0
-      })
-      produtosCaixa.map( produto =>{
-        produto.contCaixa = 0
       })
     }
     function zerarForm(){
@@ -107,7 +103,7 @@ export default function Bebidas({route}){
 
     
     function pedir(){
-      if(isValidaProduto() || isValidaProdutoCaixa()){
+      if(isValidaProduto()){
         setModalVisible(true)
       }else{
         alert('Nenhum Produto selecionado para compra!')
@@ -120,23 +116,13 @@ export default function Bebidas({route}){
             msg += `${childItem.cont} ${childItem.nome}\n`
           }
         })
-        produtosCaixa.map((item)=>{
-          if(item.contCaixa > 0){
-            msg += `${item.contCaixa} caixas de ${item.nome}\n`
-          }
-
-        })
         return msg
     }
 
 
     function cancelar(){
       setModalVisible(false)
-      setNome('')
-      setEndereco('')
-      setComplemento('')
-      setBairro('')
-      setNumero('')
+      zerarForm()
     }
 
     function decrementarProduto(item){
@@ -149,44 +135,27 @@ export default function Bebidas({route}){
     }
 
     function incrementProduto(item){
-      setProdutos(produtosCaixa.map(produto =>{
+      setProdutos(produtos.map(produto =>{
         if(item.key == produto.key){
           produto.cont++
         }
         return produto
       }))
     }
-    function incrementProdutoCaixa(item){
-      setProdutosCaixa(produtosCaixa.map(produto =>{
-        if(item.key == produto.key){
-          produto.contCaixa++
-        }
-        return produto
-      }))
-    }
-    function decrementarProdutoCaixa(item){
-      setProdutosCaixa(produtosCaixa.map(produto =>{
-        if((item.key == produto.key) && (produto.contCaixa != 0)){
-          produto.contCaixa--
-        }
-        return produto
-      }))
-    }
-    function getTotal(){
+    
+    function getTotalPagar(){
       return produtos.reduce((total,produto)=>{
         total+= (produto.valor * produto.cont)
         return total
       },0)
     }
     
-    function getTotalUnidade(){
-      return produtos.reduce((totalCaixa,produto)=>{
-        totalCaixa+= (produto.cont)
-        return totalCaixa
-      },0)
-    }
     function getQtdTotalProdutos(){
-      return getTotalUnidade()
+
+      return produtos.reduce( (total, produto) => {
+        total+= produto.cont
+        return total
+      },0)
     }
 
     return(
@@ -197,7 +166,7 @@ export default function Bebidas({route}){
                 {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} 
               </Text>
               </TouchableOpacity>
-              <Text style={styles.txtHeader}>Delivery Miriense</Text>
+              <Text style={styles.txtHeader}>{item.nome}</Text>
               <View style={{flexDirection: 'row'}}>
                 <Text>{<Icon name="shoppingcart" size={30} color="#fff"/>}</Text>
                 <Text style={{fontSize: 20, paddingLeft: 5, color: '#fff'}}>
@@ -217,7 +186,7 @@ export default function Bebidas({route}){
                     <Text style={styles.txtDesc}>{item.nome}</Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
-                            <Text style={styles.txtDesc}>Unidade:</Text>
+                            <Text style={styles.txtDesc}>Quantidade:</Text>
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
                                 <Icon name="minuscircle" size={25} color="#ff0000"/>
@@ -239,7 +208,7 @@ export default function Bebidas({route}){
             </ImageBackground>
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>
-              TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())} </Text>
+              TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPagar())} </Text>
             <TouchableOpacity style={styles.btnPedir} onPress={()=>pedir()}>
                 <Text style={styles.txtBtnPedir}>Pedir</Text>
             </TouchableOpacity>    

@@ -42,18 +42,17 @@ export default function Home({route}){
     },[])
 
     function verProdutos(item){
-        let horaAtual = new Date().getHours() +':'+ new Date().getMinutes()
+        let d = new Date()
+        let horaAtual = new Date().getHours() +':'+ new Date().getMinutes()         
         if(horaAtual > item.h_inicio && horaAtual < item.h_fim){
             if(item.categoria == 'bebidas' || item.categoria == 'agua_gas'){
                 navigation.navigate('Bebidas', {item})
-            }else if(item.categoria == 'lanches'){
+            }else if(item.categoria == 'lachonetes'){
                 navigation.navigate('Lanches', {item})
             }else if(item.categoria == 'acai'){
                 navigation.navigate('Acai', {item})
             }else if(item.categoria == 'pizza'){
                 navigation.navigate('Pizzas', {item})
-            }else{
-                navigation.navigate('Sorveterias', {item})
             }
         }
         else{
@@ -80,8 +79,7 @@ export default function Home({route}){
                     </View>
                     <View style={styles.descEstabelecimento}>
                         <Text style={styles.txtDesc}>{item.nome} </Text>
-                        <Text style={styles.txtDesc}>{item.endereco} </Text>
-                        <Text style={styles.txtDesc}>Categoria: {item.categoria} </Text>
+                        <Text style={[styles.txtDesc,{color:'#999'}]}>{item.endereco} </Text>
                         <View style={styles.viewHorario}>
                             <Text style={styles.txtDesc}>{<MaterialIcons name="access-time" size={17} color="#000"/>}: </Text>
                             <Text style={styles.txtDesc}>{item.h_inicio} </Text>
