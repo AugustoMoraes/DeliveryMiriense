@@ -53,6 +53,8 @@ export default function Home({route}){
                 navigation.navigate('Acai', {item})
             }else if(item.categoria == 'pizza'){
                 navigation.navigate('Pizzas', {item})
+            }else if(item.categoria == 'frios_congelados'){
+                navigation.navigate('FriosCongelados', {item})
             }
         }
         else{

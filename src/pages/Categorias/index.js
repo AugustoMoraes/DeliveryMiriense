@@ -4,8 +4,6 @@ import {useNavigation} from '@react-navigation/native'
 import firebase from 'firebase'
 import styles from './styles'
 
-import imagem from '../../images/heineken.jpg'
-
 export default function Categorias(){
 
     const [categorias, setCategorias] = useState([])
@@ -18,8 +16,7 @@ export default function Categorias(){
                     let list = {
                         key: childItem.key,
                         nome: childItem.val().nome,
-                        img: childItem.val().img,
-                        
+                        img: childItem.val().img,      
                     }
                     setCategorias(oldArray => [...oldArray, list])
                 })

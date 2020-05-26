@@ -20,11 +20,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 Icon.loadFont()
 Ionicons.loadFont()
     
-export default function Bebidas({route}){
+export default function FriosCongelados({route}){
     const navigation = useNavigation()
     const {item} = route.params
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
+    const [produtosPrecoFixo, setProdutosPrecoFixo] = useState([])
     const [nome, setNome] = useState('')
     const [endereco, setEndereco] = useState('')
     const [numero, setNumero] = useState('')
@@ -36,7 +37,7 @@ export default function Bebidas({route}){
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('pesos').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
@@ -52,15 +53,33 @@ export default function Bebidas({route}){
           
         });
       }
+      async function loadingListPrecosFixo(){
+
+        await firebase.database().ref(item.key).child('valFixo').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
+          setProdutosPrecoFixo([])
+          snapshot.forEach((childItem) => {
+            let list = {
+              key: childItem.key,
+              nome: childItem.val().nome,
+              disponivel: childItem.val().disponivel,
+              valor: parseFloat(childItem.val().valor),
+              cont: parseFloat(childItem.val().cont),
+              img: childItem.val().img
+            };
+            setProdutosPrecoFixo(oldArray => [...oldArray, list]); 
+          });
+          
+        });
+      }
       
-      loadingList();
-      
+      loadingList()
+      loadingListPrecosFixo()
     }, []);
     
     function confirmar(){
       if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
         let pedido = montarPedidoUnidade()
-        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
+        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPagar())
         setModalVisible(false)
         zerarQtdProdutos()
         zerarForm()
@@ -71,6 +90,9 @@ export default function Bebidas({route}){
     }
     function zerarQtdProdutos(){
       produtos.map( produto =>{
+        produto.cont = 0
+      })
+      produtosPrecoFixo.map( produto =>{
         produto.cont = 0
       })
     }
@@ -90,17 +112,7 @@ export default function Bebidas({route}){
       })
       return conProduto > 0 ? true : false 
     }
-    function isValidaProdutoCaixa(){
-      let conProdutoCaixa = 0
-      produtos.map( produto =>{
-        if(produto.contCaixa > 0){
-          conProdutoCaixa++
-        }
-      })
-
-      return conProdutoCaixa > 0 ? true : false 
-    }
-
+    
     
     function pedir(){
       if(isValidaProduto()){
@@ -113,11 +125,17 @@ export default function Bebidas({route}){
         var msg =''
         produtos.map((childItem)=>{
         if(childItem.cont > 0){
-            msg += `${childItem.cont} ${childItem.nome}\n`
+          msg += `${childItem.cont} Kg ${childItem.nome}\n`
+          }
+        })
+        produtosPrecoFixo.map((childItem)=>{
+        if(childItem.cont > 0){
+          msg += `${childItem.cont} ${childItem.nome}\n`
           }
         })
         return msg
     }
+    
 
 
     function cancelar(){
@@ -126,7 +144,7 @@ export default function Bebidas({route}){
     }
 
     function decrementarProduto(item){
-      setProdutos(produtos.map(produto =>{
+      setProdutosPrecoFixo(produtosPrecoFixo.map(produto =>{
         if((item.key == produto.key) && (produto.cont != 0)){
           produto.cont--
         }
@@ -135,27 +153,45 @@ export default function Bebidas({route}){
     }
 
     function incrementProduto(item){
-      setProdutos(produtos.map(produto =>{
+      setProdutosPrecoFixo(produtosPrecoFixo.map(produto =>{
         if(item.key == produto.key){
           produto.cont++
         }
         return produto
       }))
     }
+    function decrementarProdutoKilo(item){
+      setProdutos(produtos.map(produto =>{
+        if((item.key == produto.key) && (produto.cont != 0)){
+          produto.cont -= 0.5
+        }
+        return produto
+      }))
+    }
+
+    function incrementProdutoKilo(item){
+      setProdutos(produtos.map(produto =>{
+        if(item.key == produto.key){
+          produto.cont += 0.5
+        }
+        return produto
+      }))
+    }
     
-    function getTotalPagar(){
+    function getTotalPagarKilo(){
       return produtos.reduce((total,produto)=>{
         total+= (produto.valor * produto.cont)
         return total
       },0)
     }
-    
-    function getQtdTotalProdutos(){
-
-      return produtos.reduce( (total, produto) => {
-        total+= produto.cont
+    function getTotalPagarPrecoFixo(){
+      return produtosPrecoFixo.reduce((total,produto)=>{
+        total+= (produto.valor * produto.cont)
         return total
       },0)
+    }
+    function getTotalPagar(){
+        return getTotalPagarKilo() + getTotalPagarPrecoFixo()
     }
 
     return(
@@ -167,18 +203,40 @@ export default function Bebidas({route}){
               </Text>
               </TouchableOpacity>
               <Text style={styles.txtHeader}>{item.nome}</Text>
-              <View style={{flexDirection: 'row'}}>
-                <Text>{<Icon name="shoppingcart" size={30} color="#fff"/>}</Text>
-                <Text style={{fontSize: 20, paddingLeft: 5, color: '#fff'}}>
-                  {getQtdTotalProdutos()}
-                </Text>
-              </View>
             </View>
             <ImageBackground source={image} style={styles.imgLogo}>
             <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
                 data={produtos}
+                renderItem= {({item})=>(
+                    <View style={styles.cardProduto}>
+                    <Image source={{uri: item.img}} style={styles.img}/>
+                    <View style={styles.descProduto}>
+                    <Text style={styles.txtDesc}>{item.nome}</Text>
+                    <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
+                        <View style={styles.qtd}>
+                            <Text style={styles.txtDesc}>Quantidade(Kg):</Text>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProdutoKilo(item)}>
+                                <Icon name="minuscircle" size={25} color="#ff0000"/>
+                            </TouchableOpacity>
+                            <Text>
+                              {item.cont}
+                            </Text>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProdutoKilo(item)}>
+                                <Icon name="pluscircle" size={25} color= '#008000'/>
+                            </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>               
+                    </View>
+                    
+                )}
+            />      
+            <FlatList
+                key= {item => item.key}
+                data={produtosPrecoFixo}
                 renderItem= {({item})=>(
                     <View style={styles.cardProduto}>
                     <Image source={{uri: item.img}} style={styles.img}/>

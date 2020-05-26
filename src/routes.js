@@ -8,6 +8,7 @@ import Bebidas from './pages/Bebidas'
 import Categorias from './pages/Categorias'
 import Acai from './pages/Acai'
 import Pizzas from './pages/Pizzas'
+import FriosCongelados from './pages/FriosCongelados'
 const AppStack = createStackNavigator()
 
 export default function Routes(){
@@ -20,6 +21,7 @@ export default function Routes(){
                 <AppStack.Screen name="Bebidas" component={Bebidas}/>
                 <AppStack.Screen name="Acai" component={Acai}/>
                 <AppStack.Screen name="Pizzas" component={Pizzas}/>
+                <AppStack.Screen name="FriosCongelados" component={FriosCongelados}/>
             </AppStack.Navigator>
         </NavigationContainer>
     )
