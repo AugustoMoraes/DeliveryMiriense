@@ -77,7 +77,7 @@ export default function FriosCongelados({route}){
     }, []);
     
     function confirmar(){
-      if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
+      if(nome != '' && endereco != '' && bairro!= ''){
         let pedido = montarPedidoUnidade()
         let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPagar())
         setModalVisible(false)
@@ -112,7 +112,6 @@ export default function FriosCongelados({route}){
       })
       return conProduto > 0 ? true : false 
     }
-    
     
     function pedir(){
       if(isValidaProduto()){
@@ -244,7 +243,7 @@ export default function FriosCongelados({route}){
                     <Text style={styles.txtDesc}>{item.nome}</Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
-                            <Text style={styles.txtDesc}>Quantidade:</Text>
+                            <Text style={styles.txtDesc}>Quantidade: </Text>
                             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
                                 <Icon name="minuscircle" size={25} color="#ff0000"/>
@@ -300,7 +299,7 @@ export default function FriosCongelados({route}){
               />
               <TextInput
                 style={styles.inputPedido}
-                placeholder= "Numero"
+                placeholder= "Nº (OPC)"
                 keyboardType= 'numeric'
                 value={numero}
                 onChangeText={(value)=>{setNumero(value)}}

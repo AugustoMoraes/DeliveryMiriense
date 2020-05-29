@@ -61,7 +61,7 @@ export default function Pizzas({route}){
     }, []);
     
     function confirmar(){
-      if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
+      if(nome != '' && endereco != '' && bairro!= ''){
        let pedido = montarPedidoUnidade()
        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPreco())
        setModalVisible(false)
@@ -344,7 +344,7 @@ export default function Pizzas({route}){
               />
               <TextInput
                 style={styles.inputPedido}
-                placeholder= "Numero"
+                placeholder= "Nº (OPC)"
                 keyboardType= 'numeric'
                 value={numero}
                 onChangeText={(value)=>{setNumero(value)}}

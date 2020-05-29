@@ -21,8 +21,10 @@ Icon.loadFont()
 Ionicons.loadFont()
     
 export default function Bebidas({route}){
+
     const navigation = useNavigation()
     const {item} = route.params
+
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
     const [nome, setNome] = useState('')
@@ -58,9 +60,9 @@ export default function Bebidas({route}){
     }, []);
     
     function confirmar(){
-      if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
+      if(nome != '' || endereco != '' || bairro!= ''){
         let pedido = montarPedidoUnidade()
-        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
+        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPagar())
         setModalVisible(false)
         zerarQtdProdutos()
         zerarForm()
@@ -90,17 +92,6 @@ export default function Bebidas({route}){
       })
       return conProduto > 0 ? true : false 
     }
-    function isValidaProdutoCaixa(){
-      let conProdutoCaixa = 0
-      produtos.map( produto =>{
-        if(produto.contCaixa > 0){
-          conProdutoCaixa++
-        }
-      })
-
-      return conProdutoCaixa > 0 ? true : false 
-    }
-
     
     function pedir(){
       if(isValidaProduto()){
@@ -181,24 +172,24 @@ export default function Bebidas({route}){
                 data={produtos}
                 renderItem= {({item})=>(
                     <View style={styles.cardProduto}>
-                    <Image source={{uri: item.img}} style={styles.img}/>
+                      <Image source={{uri: item.img}} style={styles.img}/>
                     <View style={styles.descProduto}>
-                    <Text style={styles.txtDesc}>{item.nome}</Text>
-                    <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
-                        <View style={styles.qtd}>
-                            <Text style={styles.txtDesc}>Quantidade:</Text>
-                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                            <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
-                                <Icon name="minuscircle" size={25} color="#ff0000"/>
-                            </TouchableOpacity>
-                            <Text>
-                              {item.cont}
-                            </Text>
-                            <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProduto(item)}>
-                                <Icon name="pluscircle" size={25} color= '#008000'/>
-                            </TouchableOpacity>
-                            </View>
-                        </View>
+                      <Text style={styles.txtDesc}>{item.nome}</Text>
+                      <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
+                          <View style={styles.qtd}>
+                              <Text style={styles.txtDesc}>Quantidade:</Text>
+                              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                              <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProduto(item)}>
+                                  <Icon name="minuscircle" size={25} color="#ff0000"/>
+                              </TouchableOpacity>
+                              <Text>
+                                {item.cont}
+                              </Text>
+                              <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProduto(item)}>
+                                  <Icon name="pluscircle" size={25} color= '#008000'/>
+                              </TouchableOpacity>
+                              </View>
+                          </View>
                     </View>               
                     </View>
                     
@@ -242,7 +233,7 @@ export default function Bebidas({route}){
               />
               <TextInput
                 style={styles.inputPedido}
-                placeholder= "Numero"
+                placeholder= "Nº (OPC)"
                 keyboardType= 'numeric'
                 value={numero}
                 onChangeText={(value)=>{setNumero(value)}}

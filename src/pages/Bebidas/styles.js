@@ -61,6 +61,7 @@ export default StyleSheet.create({
     },
     descProduto:{
         paddingHorizontal: 5,
+        width: '60%'
     },
     txtDesc:{
         fontSize:17,

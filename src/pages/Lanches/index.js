@@ -59,7 +59,7 @@ export default function Lanches({route}){
     }, []);
     
     function confirmar(){
-      if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
+      if(nome != '' && endereco != '' && bairro!= ''){
        let pedido = montarMsg()
        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
        setModalVisible(false)
@@ -228,7 +228,7 @@ export default function Lanches({route}){
               />
               <TextInput
                 style={styles.inputPedido}
-                placeholder= "Numero"
+                placeholder= "Nº (OPC)"
                 keyboardType= 'numeric'
                 value={numero}
                 onChangeText={(value)=>{setNumero(value)}}

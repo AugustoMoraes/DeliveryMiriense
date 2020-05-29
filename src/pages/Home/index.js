@@ -20,7 +20,6 @@ export default function Home({route}){
 
     useEffect( () => {
         async function loadingVendedores(){
-            console.log(item.nome)
             await firebase.database().ref('vendedores').orderByChild('categoria').equalTo(item.nome).on('value' , (snapshot)=>{
                 setVendedores([])
                 snapshot.forEach( (childItem) =>{
@@ -47,7 +46,7 @@ export default function Home({route}){
         if(horaAtual > item.h_inicio && horaAtual < item.h_fim){
             if(item.categoria == 'bebidas' || item.categoria == 'agua_gas'){
                 navigation.navigate('Bebidas', {item})
-            }else if(item.categoria == 'lachonetes'){
+            }else if(item.categoria == 'lachonetes' || item.categoria == 'refeicoes'){
                 navigation.navigate('Lanches', {item})
             }else if(item.categoria == 'acai'){
                 navigation.navigate('Acai', {item})

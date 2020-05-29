@@ -24,7 +24,6 @@ export default function Acai({route}){
     const {item} = route.params
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
-    const [produtosCaixa, setProdutosCaixa] = useState([])
     const [nome, setNome] = useState('')
     const [endereco, setEndereco] = useState('')
     const [numero, setNumero] = useState('')
@@ -38,7 +37,6 @@ export default function Acai({route}){
 
         await firebase.database().ref(item.key).orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setProdutos([])
-          setProdutosCaixa([])
           snapshot.forEach((childItem) => {
             let list = {
               key: childItem.key,
@@ -49,7 +47,6 @@ export default function Acai({route}){
               img: childItem.val().img
             };
             setProdutos(oldArray => [...oldArray, list]); 
-            setProdutosCaixa(oldArray => [...oldArray, list]); 
           });
           
         });
@@ -60,7 +57,7 @@ export default function Acai({route}){
     }, []);
     
     function confirmar(){
-      if(nome != '' || endereco != '' || numero != '' || bairro!= ''){
+      if(nome != '' && endereco != '' && bairro!= ''){
        let pedido = montarPedidoUnidade()
        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
        setModalVisible(false)
@@ -74,9 +71,6 @@ export default function Acai({route}){
     function zerarQtdProdutos(){
       produtos.map( produto =>{
         produto.cont = 0
-      })
-      produtosCaixa.map( produto =>{
-        produto.contCaixa = 0
       })
     }
     function zerarForm(){
@@ -95,20 +89,9 @@ export default function Acai({route}){
       })
       return conProduto > 0 ? true : false 
     }
-    function isValidaProdutoCaixa(){
-      let conProdutoCaixa = 0
-      produtos.map( produto =>{
-        if(produto.contCaixa > 0){
-          conProdutoCaixa++
-        }
-      })
-
-      return conProdutoCaixa > 0 ? true : false 
-    }
-
     
     function pedir(){
-      if(isValidaProduto() || isValidaProdutoCaixa()){
+      if(isValidaProduto()){
         setModalVisible(true)
       }else{
         alert('Nenhum Produto selecionado para compra!')
@@ -121,23 +104,12 @@ export default function Acai({route}){
             msg += `${childItem.cont} ${childItem.nome}\n`
           }
         })
-        produtosCaixa.map((item)=>{
-          if(item.contCaixa > 0){
-            msg += `${item.contCaixa} caixas de ${item.nome}\n`
-          }
-
-        })
-        return msg
+    
     }
-
 
     function cancelar(){
       setModalVisible(false)
-      setNome('')
-      setEndereco('')
-      setComplemento('')
-      setBairro('')
-      setNumero('')
+      zerarForm()
     }
 
     function decrementarProduto(item){
@@ -150,7 +122,7 @@ export default function Acai({route}){
     }
 
     function incrementProduto(item){
-      setProdutos(produtosCaixa.map(produto =>{
+      setProdutos(produtos.map(produto =>{
         if(item.key == produto.key){
           produto.cont += 0.5
         }
@@ -165,16 +137,7 @@ export default function Acai({route}){
       },0)
     }
     
-    function getTotalUnidade(){
-      return produtos.reduce((totalCaixa,produto)=>{
-        totalCaixa+= (produto.cont)
-        return totalCaixa
-      },0)
-    }
-    function getQtdTotalProdutos(){
-      return getTotalUnidade()
-    }
-
+    
     return(
         <View style={styles.container}>
             <View style={styles.header}> 
@@ -253,7 +216,7 @@ export default function Acai({route}){
               />
               <TextInput
                 style={styles.inputPedido}
-                placeholder= "Numero"
+                placeholder= "Nº (OPC)"
                 keyboardType= 'numeric'
                 value={numero}
                 onChangeText={(value)=>{setNumero(value)}}
