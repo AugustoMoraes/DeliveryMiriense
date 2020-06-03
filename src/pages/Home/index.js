@@ -46,7 +46,10 @@ export default function Home({route}){
         if(horaAtual > item.h_inicio && horaAtual < item.h_fim){
             if(item.categoria == 'bebidas' || item.categoria == 'agua_gas'){
                 navigation.navigate('Bebidas', {item})
-            }else if(item.categoria == 'lachonetes' || item.categoria == 'refeicoes'){
+            }else if(item.categoria == 'refeicoes' && item.nome == 'Delícias Mirienses'){
+                navigation.navigate('DeliciasMirienses', {item})
+            }
+            else if(item.categoria == 'lachonetes' || item.categoria == 'refeicoes'){
                 navigation.navigate('Lanches', {item})
             }else if(item.categoria == 'acai'){
                 navigation.navigate('Acai', {item})

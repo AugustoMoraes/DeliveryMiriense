@@ -6,8 +6,9 @@ export default StyleSheet.create({
         backgroundColor: '#999'
     },
     header:{
-        backgroundColor: '#8A2BE2',
-        height: 80,
+        //backgroundColor: '#8A2BE2',
+        height: 100,
+        width: '90%',
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',

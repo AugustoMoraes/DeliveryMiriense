@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import {View,Text, FlatList, Image, TouchableOpacity, Linking} from 'react-native'
+import {View,Text, FlatList, Image, TouchableOpacity,ImageBackground} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import firebase from 'firebase'
+import background from '../../images/background.jpeg'
+import logo from '../../images/logo.png'
 import styles from './styles'
 
 export default function Categorias(){
@@ -26,16 +28,13 @@ export default function Categorias(){
     },[])
 
     function verListVendedores(item){
-        navigation.navigate('Home', {item})
-    }
-    function contato(){
-        Linking.openURL(`whatsapp://send?text=Obrigado pelo preferência, como podemos ajudar? &phone=5591998189662`)
+        item.nome == 'SuperInformatica' ? navigation.navigate('SuperInformatica', {item}) :navigation.navigate('Home', {item})
     }
     return(
         <View style={styles.container}>
-            <View style={styles.header}> 
-              <Text style={styles.txtHeader}>Delivery Miriense</Text>
-            </View>
+            <ImageBackground source={background} style={{flex:1}}>
+            <Image source={logo} style={{height: 120, width: '100%', alignSelf:'center'}}/>
+            
             <FlatList
                 style={styles.listCategorias}
                 numColumns = {2}
@@ -49,16 +48,7 @@ export default function Categorias(){
                     </View>
                 )}
             />
-            <View style={styles.viewFooter}>
-                <Text style={styles.txtFooter}>
-                    Se  você deseja criar um sistema para facilitar seu trabalho, entre em contato:
-                </Text>
-                    <TouchableOpacity style={styles.btnContato} onPress={contato}>
-                        <Text style={styles.txtContato}>
-                            Contato
-                        </Text>
-                    </TouchableOpacity>
-            </View>
+            </ImageBackground>
         </View>
     )
 }

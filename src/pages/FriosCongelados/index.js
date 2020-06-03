@@ -7,7 +7,8 @@ import { View,
          FlatList, 
          TextInput,
          Linking,
-         ImageBackground
+         ImageBackground,
+         ScrollView
         } from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import firebase from '../../database/firebase'
@@ -204,6 +205,10 @@ export default function FriosCongelados({route}){
               <Text style={styles.txtHeader}>{item.nome}</Text>
             </View>
             <ImageBackground source={image} style={styles.imgLogo}>
+            <ScrollView>
+            <View style={styles.viewTipoProduto}> 
+              <Text style={styles.txtTipoProduto}>Produtos Vendidos à Kilo (Kg)</Text>
+            </View>
             <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
@@ -230,9 +235,13 @@ export default function FriosCongelados({route}){
                         </View>
                     </View>               
                     </View>
-                    
                 )}
             />      
+            </View>
+            <View style={styles.viewTipoProduto}> 
+              <Text style={styles.txtTipoProduto}>Produtos Vendidos à Unidade</Text>
+            </View>
+            <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
                 data={produtosPrecoFixo}
@@ -262,6 +271,7 @@ export default function FriosCongelados({route}){
                 )}
             />      
             </View>
+            </ScrollView>
             </ImageBackground>
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>

@@ -7,7 +7,8 @@ import { View,
          FlatList, 
          TextInput,
          Linking,
-         ImageBackground
+         ImageBackground,
+         ScrollView
         } from 'react-native'
 
 import firebase from '../../database/firebase'
@@ -27,6 +28,7 @@ export default function Lanches({route}){
     const navigation = useNavigation()
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
+    const [bebidas, setBebidas] = useState([])
     const [nome, setNome] = useState('')
     const [endereco, setEndereco] = useState('')
     const [numero, setNumero] = useState('')
@@ -37,7 +39,7 @@ export default function Lanches({route}){
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('lanches').orderByChild('nome').on('value', (snapshot)=> {
           setProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
@@ -53,9 +55,27 @@ export default function Lanches({route}){
           
         });
       }
+      async function loadingListBebidas(){
+
+        await firebase.database().ref(item.key).child('bebidas').orderByChild('nome').on('value', (snapshot)=> {
+          setBebidas([])
+         
+          snapshot.forEach((childItem) => {
+            let list = {
+              key: childItem.key,
+              nome: childItem.val().nome,
+              valor: parseFloat(childItem.val().valor),
+              cont: parseFloat(childItem.val().cont),
+              img: childItem.val().img
+            };
+            setBebidas(oldArray => [...oldArray, list]); 
+          });
+          
+        });
+      }
       
       loadingList();
-      
+      loadingListBebidas();
     }, []);
     
     function confirmar(){
@@ -136,15 +156,50 @@ export default function Lanches({route}){
         return produto
       }))
     }
-    function getTotal(){
+    function decrementarBebidas(item){
+      setBebidas(bebidas.map(produto =>{
+        if((item.key == produto.key) && (produto.cont != 0)){
+          produto.cont--
+        }
+        return produto
+      }))
+    }
+
+    function incrementBebidas(item){
+      setBebidas(bebidas.map(produto =>{
+        if(item.key == produto.key){
+          produto.cont++
+        }
+        return produto
+      }))
+    }
+    function getTotalPagarLanche(){
       return produtos.reduce((total,produto)=>{
         total+= (produto.valor * produto.cont)
         return total
       },0)
     }
-    function getQtdTotalProdutos(){
+    function getTotalPagarBebidas(){
+      return bebidas.reduce((total,produto)=>{
+        total+= (produto.valor * produto.cont)
+        return total
+      },0)
+    }
+    function getTotal(){
+      return getTotalPagarBebidas() + getTotalPagarLanche()
+    }
 
+    function getQtdTotalProdutos(){
+      return getQtdTotalLanches() + getQtdTotalBebidas()
+    }
+    function getQtdTotalLanches(){
       return produtos.reduce( (total, produto) => {
+        total+= produto.cont
+        return total
+      },0)
+    }
+    function getQtdTotalBebidas(){
+      return bebidas.reduce( (total, produto) => {
         total+= produto.cont
         return total
       },0)
@@ -165,6 +220,7 @@ export default function Lanches({route}){
               </View>
             </View>
             <ImageBackground source={image} style={styles.imgLogo}>
+            <ScrollView>
             <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
@@ -176,7 +232,7 @@ export default function Lanches({route}){
                     </View>
                     <View style={styles.descProduto}>
                     <Text style={styles.txtDesc}>{item.nome} </Text>
-                    <Text style={[styles.txtDesc,{color: '#999'}]}>{item.ingredientes} </Text>
+                    <Text style={[styles.txtDesc,{color: '#999'}]}>{item.ingredientes} </Text>    
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>Quantidade:</Text>
@@ -194,7 +250,37 @@ export default function Lanches({route}){
                     </View>     
                 )}
             />      
+            </View>     
+            <View style={styles.viewCard}>
+            <FlatList
+                key= {item => item.key}
+                data={bebidas}
+                renderItem= {({item})=>(
+                    <View style={styles.cardProduto}>
+                    <View style={{justifyContent: 'center'}}>
+                    <Image source={{uri: item.img}} style={styles.img}/>
+                    </View>
+                    <View style={styles.descProduto}>
+                    <Text style={styles.txtDesc}>{item.nome} </Text>
+                    <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
+                        <View style={styles.qtd}>
+                            <Text style={styles.txtDesc}>Quantidade:</Text>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarBebidas(item)}>
+                                <Icon name="minuscircle" size={25} color="#ff0000"/>
+                            </TouchableOpacity>
+                            <Text>
+                              {item.cont}
+                            </Text>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementBebidas(item)}>
+                                <Icon name="pluscircle" size={25} color= '#008000'/>
+                            </TouchableOpacity>
+                        </View>
+                    </View>               
+                    </View>     
+                )}
+            />      
             </View>
+            </ScrollView>
             </ImageBackground>
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>

@@ -11,7 +11,8 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        borderBottomLeftRadius: 100
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20
     },
     txtHeader:{
         fontSize: 25,
@@ -43,6 +44,7 @@ export default StyleSheet.create({
         flex: 1,
         marginHorizontal: 10,
         marginVertical: 10,
+        marginBottom: 10
     },
     imgLogo:{
         flex: 1,
@@ -50,7 +52,7 @@ export default StyleSheet.create({
     },
     cardProduto:{
         flexDirection: 'row',
-        marginVertical: 10,
+        marginVertical: 5,
         marginHorizontal: 10,
         backgroundColor: '#fff',
         justifyContent: 'space-evenly',
@@ -59,8 +61,24 @@ export default StyleSheet.create({
         elevation: 10,
         opacity: 0.9
     },
+    viewTipoProduto:{
+        marginTop: 5,
+        height: 50,
+        marginHorizontal: 20,
+        backgroundColor: '#DC143C',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        elevation: 10,
+        opacity: 0.9
+    },
+    txtTipoProduto:{
+        fontSize: 20,
+        color: '#fff'
+    },
     descProduto:{
         paddingHorizontal: 5,
+        width: '65%'
     },
     txtDesc:{
         fontSize:17,

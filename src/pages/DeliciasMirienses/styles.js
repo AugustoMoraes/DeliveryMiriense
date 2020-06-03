@@ -16,7 +16,6 @@ export default StyleSheet.create({
     txtHeader:{
         fontSize: 25,
         color: '#fff',
-        //justifyContent: 'flex-end',
     },
     btnIconHeader:{
         height: 60,
@@ -24,35 +23,21 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    viewBtnProdutos:{
-        backgroundColor: '#8A2BE2',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 5
-    },
-    btnProduto:{
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 7
-    },
-    txtBtnProduto:{
-        color: '#fff',
-        fontSize: 20
+    imgLogo:{
+        flex: 1,
+        height: 500,
     },
     viewCard:{
         flex: 1,
         marginHorizontal: 10,
         marginVertical: 10,
     },
-    imgLogo:{
-        flex: 1,
-        height: 500,
-    },
     cardProduto:{
-        justifyContent: 'center',
+        flexDirection: 'row',
         marginVertical: 10,
         marginHorizontal: 10,
         backgroundColor: '#fff',
+        justifyContent: 'space-around',
         alignItems: 'center',
         borderRadius: 10,
         elevation: 10,
@@ -60,24 +45,18 @@ export default StyleSheet.create({
     },
     descProduto:{
         paddingHorizontal: 5,
-        width: '70%',
+        width: '60%'
     },
     txtDesc:{
         fontSize:17,
-        marginTop: 2,
     },
     img:{
-        marginTop: 10,
-        marginBottom: 5,
-        height: 210,
-        width: 210,
+        height: 110,
+        width: 110,
     },
     qtd:{
         flexDirection: 'row', 
         alignItems: 'center',
-        justifyContent: 'space-between',
-        //backgroundColor: '#ddd',
-        marginVertical: 3,
     },
     btnQtd:{
         height: 30,
