@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import styles from './styles'
 import firebase from '../../database/firebase'
 
-import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
+import background from '../../images/background.jpeg'
 import Icon from 'react-native-vector-icons/Feather'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -48,15 +48,19 @@ export default function Home({route}){
                 navigation.navigate('Bebidas', {item})
             }else if(item.categoria == 'refeicoes' && item.nome == 'Delícias Mirienses'){
                 navigation.navigate('DeliciasMirienses', {item})
+            }else if(item.categoria == 'refeicoes'){
+                navigation.navigate('Refeicoes', {item})
             }
-            else if(item.categoria == 'lachonetes' || item.categoria == 'refeicoes'){
+            else if(item.categoria == 'lachonetes'){
                 navigation.navigate('Lanches', {item})
-            }else if(item.categoria == 'acai'){
+            }else if(item.categoria == 'acai' || item.nome == 'Mariscos Miriense'){
                 navigation.navigate('Acai', {item})
-            }else if(item.categoria == 'pizza'){
+            }else if(item.categoria == 'pizza' && item.nome == 'Ana Doces e Salgados'){
                 navigation.navigate('Pizzas', {item})
-            }else if(item.categoria == 'frios_congelados'){
+            }else if(item.categoria == 'frios_congelados' && item.nome == 'Frangão do Denis'){
                 navigation.navigate('FriosCongelados', {item})
+            }else{
+                alert('Desculpe, Houve um problema, Tente Atualizar seu Aplicativo!')
             }
         }
         else{
@@ -66,13 +70,13 @@ export default function Home({route}){
 
     return(
         <View style={styles.container}>
+            <ImageBackground source={background} style={{flex:1}}>
             <View style={styles.header}> 
                 <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
                   <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
                 </TouchableOpacity>
                 <Text style={styles.txtHeader}>Delivery Miriense</Text>
             </View>
-            <ImageBackground source={image} style={styles.imgLogo}>
             <FlatList
                 key= {item => item.key}
                 data={vendedores}

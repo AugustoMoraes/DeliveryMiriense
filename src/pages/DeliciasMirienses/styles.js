@@ -11,21 +11,20 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        borderBottomLeftRadius: 100
+        borderBottomLeftRadius: 20, 
+        borderBottomRightRadius: 20
     },
     txtHeader:{
-        fontSize: 25,
+        fontSize: 30,
         color: '#fff',
+        width: '60%',
+        textAlign: 'center'
     },
     btnIconHeader:{
         height: 60,
         width: 30,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    imgLogo:{
-        flex: 1,
-        height: 500,
     },
     viewCard:{
         flex: 1,
@@ -71,7 +70,8 @@ export default StyleSheet.create({
         backgroundColor: '#8A2BE2',
         justifyContent: 'space-around',
         alignItems: 'center',        
-        borderTopRightRadius: 100,
+        borderTopLeftRadius: 20, 
+        borderTopRightRadius: 20
     },
     txtTotPreco:{
         fontSize: 25,

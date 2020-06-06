@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native'
 import firebase from '../../database/firebase'
 
 import styles from './styles'
-import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
+import background from '../../images/background.jpeg'
 import Icon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 Icon.loadFont()
@@ -499,7 +499,8 @@ export default function Pizzas({route}){
     }
    
     return(
-        <View style={styles.container}>
+      <View style={styles.container}>
+            <ImageBackground source={background} style={{flex:1}}>
             <View style={styles.header}> 
               <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
               <Text style={styles.iconHeader}> 
@@ -514,7 +515,6 @@ export default function Pizzas({route}){
                 </Text>
               </View>
             </View>
-            <ImageBackground source={image} style={styles.imgLogo}>
             <ScrollView>
             <View style={styles.viewCard}>
             <FlatList
@@ -683,7 +683,7 @@ export default function Pizzas({route}){
             />      
             </View>
             </ScrollView>
-            </ImageBackground>
+            
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>
               TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPreco())} </Text>
@@ -757,7 +757,7 @@ export default function Pizzas({route}){
 
           </View>
         </Modal>
-
+        </ImageBackground>
         </View>
     )
 }

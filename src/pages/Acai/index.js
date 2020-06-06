@@ -13,7 +13,7 @@ import {useNavigation} from '@react-navigation/native'
 import firebase from '../../database/firebase'
 
 import styles from './styles'
-import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
+import background from '../../images/background.jpeg'
 import Icon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 Icon.loadFont()
@@ -139,16 +139,16 @@ export default function Acai({route}){
     
     
     return(
-        <View style={styles.container}>
+      <View style={styles.container}>
+            <ImageBackground source={background} style={{flex:1}}>
             <View style={styles.header}> 
               <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
               <Text style={styles.iconHeader}> 
                 {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} 
               </Text>
               </TouchableOpacity>
-              <Text style={styles.txtHeader}>Delivery Miriense</Text>
+              <Text style={styles.txtHeader}>{item.nome}</Text>
             </View>
-            <ImageBackground source={image} style={styles.imgLogo}>
             <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
@@ -179,7 +179,6 @@ export default function Acai({route}){
                 )}
             />      
             </View>
-            </ImageBackground>
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>
               TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())} </Text>
@@ -253,7 +252,7 @@ export default function Acai({route}){
 
           </View>
         </Modal>
-
+        </ImageBackground>
         </View>
     )
 }

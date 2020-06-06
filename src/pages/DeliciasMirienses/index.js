@@ -15,7 +15,7 @@ import firebase from '../../database/firebase'
 import {useNavigation} from '@react-navigation/native'
 import styles from './styles'
 
-import image from '../../images/Brasão_Igarapé-Miri_oficial.png'
+import background from '../../images/background.jpeg'
 import Icon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -36,6 +36,7 @@ export default function DeliciasMirienses({route}){
     const [numero, setNumero] = useState('')
     const [bairro, setBairro] = useState('')
     const [complemento, setComplemento] = useState('')
+    const [troco, setTroco] = useState('')
 
     const phone =  item.contato
     useEffect(()=> {
@@ -68,9 +69,11 @@ export default function DeliciasMirienses({route}){
               grande: parseFloat(childItem.val().grande),
               medio: parseFloat(childItem.val().medio),
               pequeno: parseFloat(childItem.val().pequeno),
+              fatia: parseFloat(childItem.val().fatia),
               contG: parseFloat(childItem.val().contG),
               contM: parseFloat(childItem.val().contM),
               contP: parseFloat(childItem.val().contP),
+              contF: parseFloat(childItem.val().contF),
               img: childItem.val().img
             };
             setLanches2(oldArray => [...oldArray, list]); 
@@ -123,13 +126,17 @@ export default function DeliciasMirienses({route}){
     }, []);
     
     function confirmar(){
+      if(troco<getTotal()){
+        return alert('Troco incorreto!')
+      }
       if(nome != '' && endereco != '' && bairro!= ''){
        let pedido = montarMsg()
        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
+       let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
        setModalVisible(false)
        zerarQtdProdutos()
        zerarForm()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\nTroco para ${seuTroco}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
         alert('Preencha todos os campos!')
       }
@@ -153,7 +160,38 @@ export default function DeliciasMirienses({route}){
           conProduto++
         }
       })
-
+      lanches2.map( produto =>{
+        if(produto.contG > 0){
+          conProduto++
+        }
+      })
+      lanches2.map( produto =>{
+        if(produto.contM > 0){
+          conProduto++
+        }
+      })
+      lanches2.map( produto =>{
+        if(produto.contP > 0){
+          conProduto++
+        }
+      })
+      lanches2.map( produto =>{
+        if(produto.contF > 0){
+          conProduto++
+        }
+      })
+      combo.map( produto =>{
+        if(produto.cont > 0){
+          conProduto++
+        }
+      })
+      
+      comida.map( produto =>{
+        if(produto.cont > 0){
+          conProduto++
+        }
+      })
+      
       return conProduto > 0 ? true : false 
     }
 
@@ -174,17 +212,32 @@ export default function DeliciasMirienses({route}){
         })
         lanches2.map((childItem)=>{
             if(childItem.contG > 0){
-                msg += `${childItem.contG} ${childItem.grande}\n`
+                msg += `${childItem.contG} ${childItem.nome} (Grande)\n`
             }
         })
         lanches2.map((childItem)=>{
             if(childItem.contM > 0){
-                msg += `${childItem.contM} ${childItem.medio}\n`
+                msg += `${childItem.contM} ${childItem.nome} (Médio)\n`
             }
         })
         lanches2.map((childItem)=>{
             if(childItem.contP > 0){
-                msg += `${childItem.contP} ${childItem.pequeno}\n`
+                msg += `${childItem.contP} ${childItem.nome} (Pequeno)\n`
+            }
+        })
+        lanches2.map((childItem)=>{
+            if(childItem.contF > 0){
+                msg += `${childItem.contF} ${childItem.nome} (Fatia)\n`
+            }
+        })
+        combo.map((childItem)=>{
+            if(childItem.contF > 0){
+                msg += `${childItem.cont} ${childItem.nome}\n`
+            }
+        })
+        comida.map((childItem)=>{
+            if(childItem.cont > 0){
+                msg += `${childItem.cont} ${childItem.nome}\n`
             }
         })
       return msg
@@ -301,6 +354,23 @@ export default function DeliciasMirienses({route}){
         return produto
       }))
     }
+    function decrementarFatia(item){
+      setLanches2(lanches2.map(produto =>{
+        if((item.key == produto.key) && (produto.contF != 0)){
+          produto.contF--
+        }
+        return produto
+      }))
+    }
+
+    function incrementFatia(item){
+        setLanches2(lanches2.map(produto =>{
+        if(item.key == produto.key){
+          produto.contF++
+        }
+        return produto
+      }))
+    }
 
     function getTotalPagarLanche(){
       return produtos.reduce((total,produto)=>{
@@ -340,14 +410,30 @@ export default function DeliciasMirienses({route}){
         return total
       },0)
     }
-    
+    function getTotalPagarFatia(){
+      return lanches2.reduce((total,produto)=>{
+        if(!isNaN(produto.contF))
+          total+= (produto.fatia * produto.contF)
+        return total
+      },0)
+    }
+    function getTotalUnidade(){
+      return lanches2.reduce((total,produto)=>{
+        if(!isNaN(produto.contF)){
+          total+= (produto.contP+produto.contM+produto.contG+produto.contGG+produto.contF)
+       }
+        return total
+      },0)
+    }
     function getTotal(){
-      return  getTotalPagarLanche() + getTotalPagarMedio() + getTotalPagarGrande() + getTotalPagarPequeno() + getTotalPagarCombo() + getTotalPagarComida() 
+      return  getTotalPagarLanche() + getTotalPagarMedio() + getTotalPagarGrande() + getTotalPagarPequeno() + getTotalPagarCombo() + getTotalPagarComida()  + getTotalPagarFatia()
     }
 
     function getQtdTotalProdutos(){
-      return getQtdTotalLanches() + getQtdTotalGrande() + getQtdTotalMedio() + getQtdTotalPequeno() + getQtdTotalCombo() + getQtdTotalComida()
-    }
+        return getQtdTotalLanches() + getQtdTotalGrande() + getQtdTotalMedio() + getQtdTotalPequeno() + getQtdTotalCombo() + getQtdTotalComida() + getQtdTotalFatia()
+     
+     }
+
     function getQtdTotalLanches(){
       return produtos.reduce( (total, produto) => {
         total+= produto.cont
@@ -385,9 +471,18 @@ export default function DeliciasMirienses({route}){
         return total
       },0)
     }
+    function getQtdTotalFatia(){
+      return lanches2.reduce((total,produto)=>{
+        if(!isNaN(produto.contF)){
+          total+= (produto.contP+produto.contM+produto.contG+produto.contF)
+       }
+        return total
+      },0)
+    }
     
     return(
       <View style={styles.container}>
+            <ImageBackground source={background} style={{flex:1}}>
             <View style={styles.header}> 
               <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>
                   <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
@@ -400,7 +495,6 @@ export default function DeliciasMirienses({route}){
                 </Text>
               </View>
             </View>
-            <ImageBackground source={image} style={styles.imgLogo}>
             <ScrollView>
             <View style={styles.viewCard}>
             <FlatList
@@ -548,13 +642,30 @@ export default function DeliciasMirienses({route}){
                                 <Icon name="pluscircle" size={25} color= '#008000'/>
                             </TouchableOpacity>
                         </View>
+                        {
+                          !isNaN(item.contF) &&(
+                            <View style={styles.qtd}>
+                                <View style={{width:'60%'}}>
+                                    <Text style={styles.txtDesc}>Fatia: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.fatia)}</Text>
+                                </View>
+                                <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarFatia(item)}>
+                                    <Icon name="minuscircle" size={25} color="#ff0000"/>
+                                </TouchableOpacity>
+                                <Text>
+                                  {item.contF}
+                                </Text>
+                                <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementFatia(item)}>
+                                    <Icon name="pluscircle" size={25} color= '#008000'/>
+                                </TouchableOpacity>
+                            </View>
+                          )
+                        }
                     </View>               
                     </View>     
                 )}
             />      
             </View>
             </ScrollView>
-            </ImageBackground>
             <View style={styles.viewTotPreco}>
             <Text style={styles.txtTotPreco}>
               TOTAL: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())} </Text>
@@ -599,13 +710,19 @@ export default function DeliciasMirienses({route}){
                 value={bairro}
                 onChangeText={(value)=>{setBairro(value)}}
             />
-            <TextInput
-                style={styles.inputPedido}
-                placeholder= "Complemento (OPICIONAL)"
-                value={complemento}
-                onChangeText={(value)=>{setComplemento(value)}}
-            />
-
+              <TextInput
+                  style={styles.inputPedido}
+                  placeholder= "Complemento (OPICIONAL)"
+                  value={complemento}
+                  onChangeText={(value)=>{setComplemento(value)}}
+              />
+              <TextInput
+                  style={[styles.inputPedido,{width: '50%'}]}
+                  placeholder= "Troco Para Quanto?"
+                  value={troco}
+                  keyboardType= 'numeric'
+                  onChangeText={(value)=>{setTroco(value)}}
+              />
             <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
             <TouchableOpacity
               style={styles.btnCancelar}
@@ -624,7 +741,7 @@ export default function DeliciasMirienses({route}){
 
           </View>
         </Modal>
-         
+        </ImageBackground>
         </View>
     )
 }

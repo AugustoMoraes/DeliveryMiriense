@@ -15,8 +15,10 @@ export default StyleSheet.create({
         //borderBottomLeftRadius: 100
     },
     txtHeader:{
-        fontSize: 35,
+        fontSize: 30,
         color: '#fff',
+        width: '60%',
+        textAlign: 'center'
     },
     listCategorias:{
 

@@ -18,7 +18,7 @@ export default StyleSheet.create({
         fontSize: 30,
         color: '#fff',
         width: '60%',
-        textAlign: 'center',
+        textAlign: 'center'
     },
     btnIconHeader:{
         height: 60,

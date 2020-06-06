@@ -15,9 +15,10 @@ export default StyleSheet.create({
         borderBottomRightRadius: 20
     },
     txtHeader:{
-        fontSize: 25,
+        fontSize: 30,
         color: '#fff',
-        //justifyContent: 'flex-end',
+        width: '60%',
+        textAlign: 'center'
     },
     btnIconHeader:{
         height: 60,
@@ -108,7 +109,8 @@ export default StyleSheet.create({
         backgroundColor: '#8A2BE2',
         justifyContent: 'space-around',
         alignItems: 'center',        
-        borderTopRightRadius: 100,
+        borderTopLeftRadius: 20, 
+        borderTopRightRadius: 20
     },
     txtTotPreco:{
         fontSize: 25,

@@ -22,7 +22,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 Icon.loadFont()
 Icon.loadFont()
     
-export default function Lanches({route}){
+export default function Refeicoes({route}){
 
     const {item} = route.params
     const navigation = useNavigation()
@@ -39,7 +39,7 @@ export default function Lanches({route}){
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).child('lanches').orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).orderByChild('nome').on('value', (snapshot)=> {
           setProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
@@ -57,7 +57,7 @@ export default function Lanches({route}){
       }
       async function loadingListBebidas(){
 
-        await firebase.database().ref(item.key).child('bebidas').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('bebidas').orderByChild('nome').on('value', (snapshot)=> {
           setBebidas([])
          
           snapshot.forEach((childItem) => {
@@ -219,6 +219,7 @@ export default function Lanches({route}){
                 </Text>
               </View>
             </View>
+            
             <ScrollView>
             <View style={styles.viewCard}>
             <FlatList
@@ -250,7 +251,7 @@ export default function Lanches({route}){
                 )}
             />      
             </View>     
-            {/** <View style={styles.viewCard}>*/}
+            <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
                 data={bebidas}
@@ -278,7 +279,7 @@ export default function Lanches({route}){
                     </View>     
                 )}
             />      
-            {/** </View> */}
+            </View>
             </ScrollView>
             
             <View style={styles.viewTotPreco}>
@@ -289,68 +290,68 @@ export default function Lanches({route}){
             </TouchableOpacity>    
             </View>
             
-          <Modal
-          animationType="slide"
-          visible={modalVisible}
-          transparent= {true}
-          >
-            <View style={{flex: 1, justifyContent: 'flex-end'}}>
-            <View style={styles.modalView}>
+        <Modal
+        animationType="slide"
+        visible={modalVisible}
+        transparent= {true}
+        >
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <View style={styles.modalView}>
+            <TextInput
+              style={styles.inputPedido}
+              returnKeyType = 'next'
+              enablesReturnKeyAutomatically = {true}
+              placeholder= "Digite seu nome"
+              value={nome}
+              onChangeText={(value)=>{setNome(value)}}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <TextInput
+                style={[styles.inputPedido,{marginRight: 10, width: '80%'}]}
+                placeholder= "Endereço"
+                value={endereco}
+                onChangeText={(value)=>{setEndereco(value)}}
+              />
               <TextInput
                 style={styles.inputPedido}
-                returnKeyType = 'next'
-                enablesReturnKeyAutomatically = {true}
-                placeholder= "Digite seu nome"
-                value={nome}
-                onChangeText={(value)=>{setNome(value)}}
+                placeholder= "Nº (OPC)"
+                keyboardType= 'numeric'
+                value={numero}
+                onChangeText={(value)=>{setNumero(value)}}
               />
-              <View style={{flexDirection: 'row'}}>
-                <TextInput
-                  style={[styles.inputPedido,{marginRight: 10, width: '80%'}]}
-                  placeholder= "Endereço"
-                  value={endereco}
-                  onChangeText={(value)=>{setEndereco(value)}}
-                />
-                <TextInput
-                  style={styles.inputPedido}
-                  placeholder= "Nº (OPC)"
-                  keyboardType= 'numeric'
-                  value={numero}
-                  onChangeText={(value)=>{setNumero(value)}}
-                />
-              </View>
-              <TextInput
-                  style={styles.inputPedido}
-                  placeholder= "Bairro"
-                  value={bairro}
-                  onChangeText={(value)=>{setBairro(value)}}
-              />
-              <TextInput
-                  style={styles.inputPedido}
-                  placeholder= "Complemento (OPICIONAL)"
-                  value={complemento}
-                  onChangeText={(value)=>{setComplemento(value)}}
-              />
-
-              <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
-              <TouchableOpacity
-                style={styles.btnCancelar}
-                onPress={cancelar}
-              >
-                <Text style={styles.txtPedido}>Cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.btnConfirmar}
-                onPress={confirmar}
-              >
-                <Text style={styles.txtPedido}>Confirmar</Text>
-              </TouchableOpacity>
-              </View>
             </View>
+            <TextInput
+                style={styles.inputPedido}
+                placeholder= "Bairro"
+                value={bairro}
+                onChangeText={(value)=>{setBairro(value)}}
+            />
+            <TextInput
+                style={styles.inputPedido}
+                placeholder= "Complemento (OPICIONAL)"
+                value={complemento}
+                onChangeText={(value)=>{setComplemento(value)}}
+            />
 
+            <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
+            <TouchableOpacity
+              style={styles.btnCancelar}
+              onPress={cancelar}
+            >
+              <Text style={styles.txtPedido}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnConfirmar}
+              onPress={confirmar}
+            >
+              <Text style={styles.txtPedido}>Confirmar</Text>
+            </TouchableOpacity>
             </View>
-          </Modal>
-          </ImageBackground>
+          </View>
+
+          </View>
+        </Modal>
+        </ImageBackground>
         </View>
     )
 }

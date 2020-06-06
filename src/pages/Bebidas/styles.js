@@ -9,14 +9,17 @@ export default StyleSheet.create({
         backgroundColor: '#8A2BE2',
         height: 80,
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
+        paddingHorizontal: 15,
         alignItems: 'center',
-        borderBottomLeftRadius: 100
+        borderBottomLeftRadius: 20, 
+        borderBottomRightRadius: 20
     },
     txtHeader:{
-        fontSize: 25,
+        fontSize: 30,
         color: '#fff',
-        //justifyContent: 'flex-end',
+        width: '60%',
+        textAlign: 'center'
     },
     btnIconHeader:{
         height: 60,
@@ -43,10 +46,6 @@ export default StyleSheet.create({
         flex: 1,
         marginHorizontal: 10,
         marginVertical: 10,
-    },
-    imgLogo:{
-        flex: 1,
-        height: 500,
     },
     cardProduto:{
         flexDirection: 'row',
@@ -91,7 +90,8 @@ export default StyleSheet.create({
         backgroundColor: '#8A2BE2',
         justifyContent: 'space-around',
         alignItems: 'center',        
-        borderTopRightRadius: 100,
+        borderTopLeftRadius: 20, 
+        borderTopRightRadius: 20
     },
     txtTotPreco:{
         fontSize: 25,

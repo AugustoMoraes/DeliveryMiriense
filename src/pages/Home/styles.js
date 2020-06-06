@@ -11,7 +11,8 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        borderBottomLeftRadius: 100
+        borderBottomLeftRadius: 20, 
+        borderBottomRightRadius: 20
     },
     txtHeader:{
         fontSize: 35,
@@ -22,10 +23,6 @@ export default StyleSheet.create({
         width: 30,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    imgLogo:{
-        flex: 1,
-        height: 500,
     },
     cardVendedores:{
         flexDirection: 'row',
