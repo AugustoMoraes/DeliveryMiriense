@@ -55,9 +55,12 @@ export default function Home({route}){
                 navigation.navigate('Lanches', {item})
             }else if(item.categoria == 'acai' || item.nome == 'Mariscos Miriense'){
                 navigation.navigate('Acai', {item})
-            }else if(item.categoria == 'pizza' && item.nome == 'Ana Doces e Salgados'){
+            }else if(item.nome == 'Ana Doces e Salgados'){
                 navigation.navigate('Pizzas', {item})
-            }else if(item.categoria == 'frios_congelados' && item.nome == 'Frangão do Denis'){
+            }else if(item.nome == 'Pizzaria La Praça'){
+                navigation.navigate('RosePizzaria', {item})
+            }
+            else if(item.categoria == 'frios_congelados' && item.nome == 'Frangão do Denis'){
                 navigation.navigate('FriosCongelados', {item})
             }else{
                 alert('Desculpe, Houve um problema, Tente Atualizar seu Aplicativo!')

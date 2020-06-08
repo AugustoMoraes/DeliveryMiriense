@@ -20,7 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 Icon.loadFont()
 Ionicons.loadFont()
     
-export default function Pizzas({route}){
+export default function RosePizzaria({route}){
     const navigation = useNavigation()
     const {item} = route.params
     const [modalVisible, setModalVisible] = useState(false)
@@ -45,13 +45,10 @@ export default function Pizzas({route}){
             key: childItem.key,
             nome: childItem.val().nome,
             ingredientes: childItem.val().ingredientes,
-            contB: parseFloat(childItem.val().contB),
             contP: parseFloat(childItem.val().contP),
             contM: parseFloat(childItem.val().contM),
             contG: parseFloat(childItem.val().contG),
-            contGG: parseFloat(childItem.val().contGG),
             contF: parseFloat(childItem.val().contF),
-            brotinho: parseFloat(childItem.val().brotinho),
             pequena: parseFloat(childItem.val().pequena),
             media: parseFloat(childItem.val().media),
             grande: parseFloat(childItem.val().grande),
@@ -64,14 +61,15 @@ export default function Pizzas({route}){
         });
     }
     
-    async function loadingListSucos(){
+    async function loadingListRefri(){
 
-      await firebase.database().ref(item.key).child('sucos').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
+      await firebase.database().ref(item.key).child('bebidas').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
         setSucos([])
         snapshot.forEach((childItem) => {
           let list = {
             key: childItem.key,
             nome: childItem.val().nome,
+            sabores: childItem.val().sabores,
             cont: parseFloat(childItem.val().cont),
             valor: parseFloat(childItem.val().valor),
             img: childItem.val().img
@@ -82,29 +80,9 @@ export default function Pizzas({route}){
         });
     }
     
-    async function loadingListRefri(){
-
-      await firebase.database().ref(item.key).child('refrigerantes').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
-        setRefri([])
-        snapshot.forEach((childItem) => {
-          let list = {
-            key: childItem.key,
-            nome: childItem.val().nome,
-            sabores: childItem.val().sabores,
-            cont: parseFloat(childItem.val().cont),
-            valor: parseFloat(childItem.val().valor),
-            img: childItem.val().img
-          };
-          setRefri(oldArray => [...oldArray, list]); 
-        });
-        
-        });
-    }
-    
     
     useEffect(()=> {
       loadingList()
-      loadingListSucos()
       loadingListRefri()
     }, []);
     
@@ -145,15 +123,7 @@ export default function Pizzas({route}){
       })
       return conProduto > 0 ? true : false 
     }
-    function isValidaRefri(){
-      let conProduto = 0
-      refri.map( produto =>{
-        if(produto.cont > 0){
-          conProduto++
-        }
-      })
-      return conProduto > 0 ? true : false 
-    }
+  
     function isValidaProdutoPequena(){
       let conProduto = 0
       produtos.map( produto =>{
@@ -163,15 +133,7 @@ export default function Pizzas({route}){
       })
       return conProduto > 0 ? true : false 
     }
-    function isValidaProdutoBrotinho(){
-      let conProduto = 0
-      produtos.map( produto =>{
-        if(produto.contB > 0){
-          conProduto++
-        }
-      })
-      return conProduto > 0 ? true : false 
-    }
+    
     function isValidaProdutoMedia(){
       let conProduto = 0
       produtos.map( produto =>{
@@ -190,15 +152,7 @@ export default function Pizzas({route}){
       })
       return conProduto > 0 ? true : false 
     }
-    function isValidaProdutoGigante(){
-      let conProduto = 0
-      produtos.map( produto =>{
-        if(produto.contGG > 0){
-          conProduto++
-        }
-      })
-      return conProduto > 0 ? true : false 
-    }
+    
     function isValidaProdutoFamilia(){
       let conProduto = 0
       produtos.map( produto =>{
@@ -212,8 +166,7 @@ export default function Pizzas({route}){
     
     function pedir(){
       if(isValidaProdutoMedia() || isValidaProdutoGrande() || isValidaProdutoFamilia() 
-          || isValidaProdutoGigante() || isValidaProdutoPequena() || isValidaProdutoBrotinho() ||
-          isValidaRefri() || isValidaSuco()){
+          || isValidaProdutoPequena() || isValidaSuco()){
         setModalVisible(true)
       }else{
         alert('Nenhum Produto selecionado para compra!')
@@ -221,11 +174,6 @@ export default function Pizzas({route}){
     }
     function montarPedidoUnidade(){
         var msg =''
-        produtos.map((childItem)=>{
-        if(childItem.contB > 0){
-            msg += `${childItem.contB} ${childItem.nome} Brotinho\n`
-          }
-        })
         produtos.map((childItem)=>{
         if(childItem.contP > 0){
             msg += `${childItem.contP} ${childItem.nome} Pequena\n`
@@ -242,21 +190,11 @@ export default function Pizzas({route}){
           }
         })
         produtos.map((childItem)=>{
-        if(childItem.contGG > 0){
-            msg += `${childItem.contGG} ${childItem.nome} Gigante\n`
-          }
-        })
-        produtos.map((childItem)=>{
         if(childItem.contF > 0){
             msg += `${childItem.contF} ${childItem.nome} Família\n`
           }
         })
         sucos.map((childItem)=>{
-        if(childItem.cont > 0){
-            msg += `${childItem.cont} ${childItem.nome} Família\n`
-          }
-        })
-        refri.map((childItem)=>{
         if(childItem.cont > 0){
             msg += `${childItem.cont} ${childItem.nome} Família\n`
           }
@@ -270,23 +208,6 @@ export default function Pizzas({route}){
       zerarForm()
     }
 
-    function decrementarProdutoBrotinho(item){
-      setProdutos(produtos.map(produto =>{
-        if((item.key == produto.key) && (produto.contB != 0)){
-          produto.contB--
-        }
-        return produto
-      }))
-    }
-
-    function incrementProdutoBrotinho(item){
-      setProdutos(produtos.map(produto =>{
-        if(item.key == produto.key){
-          produto.contB++
-        }
-        return produto
-      }))
-    }
 
     function decrementarProdutoPequena(item){
       setProdutos(produtos.map(produto =>{
@@ -343,24 +264,6 @@ export default function Pizzas({route}){
         return produto
       }))
     }
-    function decrementarProdutoGigante(item){
-      setProdutos(produtos.map(produto =>{
-        if((item.key == produto.key) && (produto.contGG != 0)){
-          produto.contGG--
-        }
-        return produto
-      }))
-     
-    }
-
-    function incrementProdutoGigante(item){
-      setProdutos(produtos.map(produto =>{
-        if(item.key == produto.key){
-          produto.contGG++
-        }
-        return produto
-      }))
-    }
     
     function decrementarProdutoFamilia(item){
       setProdutos(produtos.map(produto =>{
@@ -396,49 +299,20 @@ export default function Pizzas({route}){
         return produto
       }))
     }
-    function decrementarRefri(item){
-      setRefri(refri.map(produto =>{
-        if((item.key == produto.key) && (produto.cont != 0)){
-          produto.cont--
-        }
-        return produto
-      }))
-    }
-
-    function incrementRefri(item){
-      setRefri(refri.map(produto =>{
-        if(item.key == produto.key){
-          produto.cont++
-        }
-        return produto
-      }))
-    }
     
-    function getTotalRefri(){
-        return refri.reduce((total,produto)=>{
-          total+= (produto.valor * produto.cont)
-          return total
-        },0)
-    }
     function getTotalSucos(){
         return sucos.reduce((total,produto)=>{
           total+= (produto.valor * produto.cont)
           return total
         },0)
     }
-    function getTotalBrotinho(){
-        return produtos.reduce((total,produto)=>{
-          if(!isNaN(produto.contB))
-            total+= (produto.brotinho * produto.contB)
-          return total
-        },0)
-    }
+   
     function getTotalPequena(){
-      return produtos.reduce((total,produto)=>{
-        if(!isNaN(produto.contP))
-          total+= (produto.pequena * produto.contP)
-        return total
-      },0)
+        return produtos.reduce((total,produto)=>{
+            if(!isNaN(produto.contP))
+              total+= (produto.pequena * produto.contP)
+            return total
+          },0)
     }
     function getTotalMedia(){
       return produtos.reduce((total,produto)=>{
@@ -452,12 +326,7 @@ export default function Pizzas({route}){
         return total
       },0)
     }
-    function getTotalGigante(){
-      return produtos.reduce((total,produto)=>{
-        total+= (produto.grande * produto.contGG)
-        return total
-      },0)
-    }
+   
     function getTotalFamilia(){
       return produtos.reduce((total,produto)=>{
         total+= (produto.familia * produto.contF)
@@ -465,24 +334,22 @@ export default function Pizzas({route}){
       },0)
     }
     
-    function getTotalUnidade(){
+    function getQtdTotalPizza(){
       return produtos.reduce((total,produto)=>{
-        if(!isNaN(produto.contP)){
-          total+= (produto.contP+produto.contM+produto.contG+produto.contGG+produto.contF)
-        }
-        if(!isNaN(produto.contB)){
-          total+= (produto.contB)
-        }
-        
-        return total
+          if(!isNaN(produto.contP)){
+            total+= (produto.contP+produto.contM+produto.contG+produto.contF)
+          }
+            total+= (produto.contM + produto.contG + produto.contF)
+          return total
       },0)
+
     }
   
     function getTotalPreco(){
-      return getTotalBrotinho() + getTotalPequena() + getTotalMedia() + getTotalGrande() + getTotalGigante() + getTotalFamilia() + getTotalSucos() + getTotalRefri()
+      return  getTotalPequena() + getTotalMedia() + getTotalGrande() + getTotalFamilia() + getTotalSucos()
     }
     function getQtdTotalProdutos(){
-      return getTotalUnidade()
+      return getQtdTotalPizza()
     }
    
     return(
@@ -513,24 +380,7 @@ export default function Pizzas({route}){
                   <View style={styles.descProduto}>
                   <Text style={styles.txtDesc}>Sabor: {item.nome}</Text>
                   <Text style={[styles.txtDesc, {color: '#999'}]}>{item.ingredientes}</Text>
-                  {
-                      !isNaN(item.contB) &&(
-                      <View style={styles.qtd}>
-                          <Text style={styles.txtDesc}>Brotinho: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.brotinho)}</Text>
-                          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                          <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProdutoBrotinho(item)}>
-                              <Icon name="minuscircle" size={25} color="#ff0000"/>
-                          </TouchableOpacity>
-                          <Text>
-                            {item.contB}
-                          </Text>
-                          <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProdutoBrotinho(item)}>
-                              <Icon name="pluscircle" size={25} color= '#008000'/>
-                          </TouchableOpacity>
-                          </View>
-                      </View>
-                    )
-                  }
+                  
                   {
                       !isNaN(item.contP) &&(
                       <View style={styles.qtd}>
@@ -578,20 +428,6 @@ export default function Pizzas({route}){
                           </View>
                       </View>
                       <View style={styles.qtd}>
-                          <Text style={styles.txtDesc}>Gigante: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.grande)}</Text>
-                          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                          <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProdutoGigante(item)}>
-                              <Icon name="minuscircle" size={25} color="#ff0000"/>
-                          </TouchableOpacity>
-                          <Text>
-                            {item.contGG}
-                          </Text>
-                          <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementProdutoGigante(item)}>
-                              <Icon name="pluscircle" size={25} color= '#008000'/>
-                          </TouchableOpacity>
-                          </View>
-                      </View>
-                      <View style={styles.qtd}>
                           <Text style={styles.txtDesc}>Família: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.familia)}</Text>
                           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                           <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProdutoFamilia(item)}>
@@ -618,7 +454,12 @@ export default function Pizzas({route}){
                   <View style={styles.cardProduto}>
                     <Image source={{uri: item.img}} style={styles.img}/>
                     <View style={styles.descProduto}>
-                    <Text style={styles.txtDesc}>Sabor: {item.nome}</Text>
+                    <Text style={styles.txtDesc}>{item.nome}</Text>
+                    {
+                        item.sabores!=null &&(
+                            <Text style={styles.txtDesc}>Sabores: {item.sabores}</Text>
+                        )
+                    }
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>Quantidade:</Text>
@@ -630,36 +471,6 @@ export default function Pizzas({route}){
                               {item.cont}
                             </Text>
                             <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementSuco(item)}>
-                                <Icon name="pluscircle" size={25} color= '#008000'/>
-                            </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>               
-                  </View>
-                )}
-            />      
-            </View>
-            <View style={styles.viewCard}>
-            <FlatList
-                key= {item => item.key}
-                data={refri}
-                renderItem= {({item})=>(
-                  <View style={styles.cardProduto}>
-                    <Image source={{uri: item.img}} style={styles.img}/>
-                    <View style={styles.descProduto}>
-                    <Text style={styles.txtDesc}>Refrigerante: {item.nome}</Text>
-                    <Text style={styles.txtDesc}>Sabores: {item.sabores}</Text>
-                    <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
-                        <View style={styles.qtd}>
-                            <Text style={styles.txtDesc}>Quantidade:</Text>
-                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                            <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarRefri(item)}>
-                                <Icon name="minuscircle" size={25} color="#ff0000"/>
-                            </TouchableOpacity>
-                            <Text>
-                              {item.cont}
-                            </Text>
-                            <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementRefri(item)}>
                                 <Icon name="pluscircle" size={25} color= '#008000'/>
                             </TouchableOpacity>
                             </View>
@@ -726,12 +537,13 @@ export default function Pizzas({route}){
                 onChangeText={(value)=>{setComplemento(value)}}
             />
             <TextInput
-                  style={[styles.inputPedido,{width: '50%'}]}
-                  placeholder= "Troco Para Quanto?"
-                  value={troco}
-                  keyboardType= 'numeric'
-                  onChangeText={(value)=>{setTroco(value)}}
-              />
+              style={[styles.inputPedido,{width: '50%'}]}
+              placeholder= "Troco Para Quanto?"
+              value={troco}
+              keyboardType= 'numeric'
+              onChangeText={(value)=>{setTroco(value)}}
+            />
+
             <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
             <TouchableOpacity
               style={styles.btnCancelar}

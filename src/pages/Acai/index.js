@@ -29,6 +29,7 @@ export default function Acai({route}){
     const [numero, setNumero] = useState('')
     const [bairro, setBairro] = useState('')
     const [complemento, setComplemento] = useState('')
+    const [troco, setTroco] = useState('')
 
     const phone =  item.contato
 
@@ -57,13 +58,17 @@ export default function Acai({route}){
     }, []);
     
     function confirmar(){
+      if(troco<getTotal()){
+        return alert('Troco incorreto!')
+      }
       if(nome != '' && endereco != '' && bairro!= ''){
        let pedido = montarPedidoUnidade()
        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
+       let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
        setModalVisible(false)
        zerarQtdProdutos()
        zerarForm()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir:\n\n${pedido}Total: ${total}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir:\n\n${pedido}Total: ${total}\nTroco para ${seuTroco}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
         alert('Voce deve preencher o(s) campo(s) obrigatórios!')
       }
@@ -233,7 +238,13 @@ export default function Acai({route}){
                 value={complemento}
                 onChangeText={(value)=>{setComplemento(value)}}
             />
-
+            <TextInput
+                  style={[styles.inputPedido,{width: '50%'}]}
+                  placeholder= "Troco Para Quanto?"
+                  value={troco}
+                  keyboardType= 'numeric'
+                  onChangeText={(value)=>{setTroco(value)}}
+            />
             <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
             <TouchableOpacity
               style={styles.btnCancelar}

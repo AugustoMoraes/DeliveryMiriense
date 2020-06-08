@@ -34,12 +34,13 @@ export default function Lanches({route}){
     const [numero, setNumero] = useState('')
     const [bairro, setBairro] = useState('')
     const [complemento, setComplemento] = useState('')
+    const [troco, setTroco] = useState('')
 
     const phone =  item.contato
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).child('lanches').orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('lanches').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
@@ -57,7 +58,7 @@ export default function Lanches({route}){
       }
       async function loadingListBebidas(){
 
-        await firebase.database().ref(item.key).child('bebidas').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('bebidas').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setBebidas([])
          
           snapshot.forEach((childItem) => {
@@ -79,13 +80,17 @@ export default function Lanches({route}){
     }, []);
     
     function confirmar(){
+      if(troco<getTotal()){
+        return alert('Troco incorreto!')
+      }
       if(nome != '' && endereco != '' && bairro!= ''){
        let pedido = montarMsg()
        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
+       let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
        setModalVisible(false)
        zerarQtdProdutos()
        zerarForm()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\nTroco para ${seuTroco}\n\NLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
         alert('Preencha todos os campos!')
       }
@@ -112,10 +117,20 @@ export default function Lanches({route}){
 
       return conProduto > 0 ? true : false 
     }
+    function isValidaBebidas(){
+      let conProduto = 0
+      bebidas.map( produto =>{
+        if(produto.cont > 0){
+          conProduto++
+        }
+      })
+
+      return conProduto > 0 ? true : false 
+    }
 
     
     function pedir(){
-      if(isValidaProduto()){
+      if(isValidaProduto() || isValidaBebidas()){
         setModalVisible(true)
       }else{
         alert('Nenhum Produto selecionado para compra!')
@@ -124,10 +139,15 @@ export default function Lanches({route}){
     function montarMsg(){
         var msg =''
         produtos.map((childItem)=>{
-        if(childItem.cont > 0){
-            msg += `${childItem.cont} ${childItem.nome}\n`
-         }
-      })
+          if(childItem.cont > 0){
+              msg += `${childItem.cont} ${childItem.nome}\n`
+          }
+        })
+        bebidas.map((childItem)=>{
+          if(childItem.cont > 0){
+              msg += `${childItem.cont} ${childItem.nome}\n`
+          }
+        })
       return msg
     }
     function cancelar(){
@@ -331,7 +351,13 @@ export default function Lanches({route}){
                   value={complemento}
                   onChangeText={(value)=>{setComplemento(value)}}
               />
-
+              <TextInput
+                  style={[styles.inputPedido,{width: '50%'}]}
+                  placeholder= "Troco Para Quanto?"
+                  value={troco}
+                  keyboardType= 'numeric'
+                  onChangeText={(value)=>{setTroco(value)}}
+              />
               <View style={{flexDirection: 'row', justifyContent:'space-around'}}>
               <TouchableOpacity
                 style={styles.btnCancelar}

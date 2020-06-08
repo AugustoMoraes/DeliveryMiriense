@@ -42,7 +42,7 @@ export default function DeliciasMirienses({route}){
     useEffect(()=> {
       async function loadingList(){
 
-        await firebase.database().ref(item.key).child('lanches').orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('lanches').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setProdutos([])
           snapshot.forEach((childItem) => {
             let list = {
@@ -59,7 +59,7 @@ export default function DeliciasMirienses({route}){
       }
       async function loadingListLanches2(){
 
-        await firebase.database().ref(item.key).child('lanches2').orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('lanches2').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setLanches2([])
          
           snapshot.forEach((childItem) => {
@@ -83,7 +83,7 @@ export default function DeliciasMirienses({route}){
       }
       async function loadingListComidas(){
 
-        await firebase.database().ref(item.key).child('comidas').orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('comidas').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setComida([])
          
           snapshot.forEach((childItem) => {
@@ -102,7 +102,7 @@ export default function DeliciasMirienses({route}){
       }
       async function loadingListCombo(){
 
-        await firebase.database().ref(item.key).child('combo').orderByChild('nome').on('value', (snapshot)=> {
+        await firebase.database().ref(item.key).child('combo').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
           setCombo([])
          
           snapshot.forEach((childItem) => {
