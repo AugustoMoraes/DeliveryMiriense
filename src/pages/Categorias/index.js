@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {View,Text, FlatList, Image, TouchableOpacity,ImageBackground} from 'react-native'
+import {View,Text, FlatList, Image, TouchableOpacity,ImageBackground,StatusBar} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import firebase from 'firebase'
 import background from '../../images/background.jpeg'
@@ -32,8 +32,11 @@ export default function Categorias(){
     }
     return(
         <View style={styles.container}>
+            <StatusBar 
+                backgroundColor="#99c89a"
+            />
             <ImageBackground source={background} style={{flex:1}}>
-            <Image source={logo} style={{height: 120, width: '100%', alignSelf:'center'}}/>
+            <Image source={logo} style={{height: 120, width: '100%', alignSelf:'center', marginTop: 20}}/>
             
             <FlatList
                 style={styles.listCategorias}

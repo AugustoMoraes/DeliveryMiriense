@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {View, Text, Image, TouchableOpacity, FlatList,ImageBackground} from 'react-native'
+import {View, Text, Image, TouchableOpacity, FlatList,ImageBackground, StatusBar} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import styles from './styles'
 import firebase from '../../database/firebase'
@@ -73,6 +73,9 @@ export default function Home({route}){
 
     return(
         <View style={styles.container}>
+            <StatusBar 
+                backgroundColor="#8A2BE2"
+            />
             <ImageBackground source={background} style={{flex:1}}>
             <View style={styles.header}> 
                 <TouchableOpacity style={styles.btnIconHeader} onPress={()=>{navigation.goBack()}}>

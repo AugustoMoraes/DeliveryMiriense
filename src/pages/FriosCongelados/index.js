@@ -211,9 +211,6 @@ export default function FriosCongelados({route}){
               <Text style={styles.txtHeader}>{item.nome}</Text>
             </View>
             <ScrollView>
-            <View style={styles.viewTipoProduto}> 
-              <Text style={styles.txtTipoProduto}>Produtos Vendidos à Kilo (Kg)</Text>
-            </View>
             <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
@@ -242,11 +239,6 @@ export default function FriosCongelados({route}){
                     </View>
                 )}
             />      
-            </View>
-            <View style={styles.viewTipoProduto}> 
-              <Text style={styles.txtTipoProduto}>Produtos Vendidos à Unidade</Text>
-            </View>
-            <View style={styles.viewCard}>
             <FlatList
                 key= {item => item.key}
                 data={produtosPrecoFixo}

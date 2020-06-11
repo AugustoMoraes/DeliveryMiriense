@@ -337,7 +337,7 @@ export default function RosePizzaria({route}){
     function getQtdTotalPizza(){
       return produtos.reduce((total,produto)=>{
           if(!isNaN(produto.contP)){
-            total+= (produto.contP+produto.contM+produto.contG+produto.contF)
+            total+= (produto.contP)
           }
             total+= (produto.contM + produto.contG + produto.contF)
           return total
