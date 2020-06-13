@@ -319,7 +319,7 @@ export default function FriosCongelados({route}){
             />
             <TextInput
                 style={styles.inputPedido}
-                placeholder= "Complemento (OPICIONAL)"
+                placeholder= "Ponto de Referência"
                 value={complemento}
                 onChangeText={(value)=>{setComplemento(value)}}
             />

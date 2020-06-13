@@ -40,10 +40,7 @@ export default function Home({route}){
         loadingVendedores()
     },[])
 
-    function verProdutos(item){
-        let d = new Date()
-        let horaAtual = new Date().getHours() +':'+ new Date().getMinutes()         
-        if(horaAtual > item.h_inicio && horaAtual < item.h_fim){
+    function verProdutos(item){        
             if(item.categoria == 'bebidas' || item.categoria == 'agua_gas'){
                 navigation.navigate('Bebidas', {item})
             }else if(item.categoria == 'refeicoes' && item.nome == 'Delícias Mirienses'){
@@ -65,10 +62,7 @@ export default function Home({route}){
             }else{
                 alert('Desculpe, Houve um problema, Tente Atualizar seu Aplicativo!')
             }
-        }
-        else{
-            alert('Nosso Delivery está encerrado por hoje, Voltamos amanha!')
-        }
+        
     }
 
     return(
