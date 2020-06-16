@@ -126,20 +126,34 @@ export default function DeliciasMirienses({route}){
     }, []);
     
     function confirmar(){
+     if(troco == 0){
+       if(nome != '' && endereco != '' && bairro!= ''){
+        let pedido = montarMsg()
+        let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
+        setModalVisible(false)
+        zerarQtdProdutos()
+        zerarForm()
+        Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+       }else{
+         alert('Preencha todos os campos!')
+       }
+     }else{
       if(troco<getTotal()){
         return alert('Troco incorreto!')
-      }
-      if(nome != '' && endereco != '' && bairro!= ''){
-       let pedido = montarMsg()
-       let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
-       let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
-       setModalVisible(false)
-       zerarQtdProdutos()
-       zerarForm()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\nTroco para ${seuTroco}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
       }else{
-        alert('Preencha todos os campos!')
+        if(nome != '' && endereco != '' && bairro!= ''){
+          let pedido = montarMsg()
+          let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
+          let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
+          setModalVisible(false)
+          zerarQtdProdutos()
+          zerarForm()
+          Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir: \n${pedido}\nTotal: ${total}\nTroco para ${seuTroco}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+         }else{
+           alert('Preencha todos os campos!')
+         }
       }
+     }
     }
     function zerarQtdProdutos(){
       produtos.map( produto =>{
@@ -152,6 +166,7 @@ export default function DeliciasMirienses({route}){
       setNumero('')
       setBairro('')
       setComplemento('')
+      setTroco('')
     }
     function isValidaProduto(){
       let conProduto = 0
@@ -244,11 +259,7 @@ export default function DeliciasMirienses({route}){
     }
     function cancelar(){
       setModalVisible(false)
-      setNome('')
-      setEndereco('')
-      setComplemento('')
-      setBairro('')
-      setNumero('')
+      zerarForm()
     }
 
     function decrementarProduto(item){

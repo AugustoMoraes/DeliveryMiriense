@@ -26,10 +26,10 @@ export default StyleSheet.create({
     },
     cardVendedores:{
         flexDirection: 'row',
-        marginVertical: 10,
+        marginVertical: 5,
         marginHorizontal: 10,
         paddingHorizontal: 10,
-        paddingTop: 15,
+        paddingTop: 5,
         backgroundColor: '#fff',
         justifyContent: 'space-around',
         alignItems: 'center',
@@ -39,8 +39,8 @@ export default StyleSheet.create({
         opacity: 0.9
     },
     img:{
-        height: 130,
-        width: 130,
+        height: 135,
+        width: 135,
     },
     txtDesc:{
         fontSize: 20,

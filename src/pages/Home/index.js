@@ -76,7 +76,7 @@ export default function Home({route}){
                   <Text style={styles.iconHeader}> {<Ionicons name="md-arrow-round-back" size={25} color="#fff"/>} </Text>
                 </TouchableOpacity>
                 <Text style={styles.txtHeader}>Delivery Miriense</Text>
-            </View>
+            </View> 
             <FlatList
                 key= {item => item.key}
                 data={vendedores}

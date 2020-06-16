@@ -109,19 +109,33 @@ export default function Pizzas({route}){
     }, []);
     
     function confirmar(){
-      if(troco<getTotalPreco()){
-        return alert('Troco incorreto!')
-      }
-      if(nome != '' && endereco != '' && bairro!= ''){
-       let pedido = montarPedidoUnidade()
-       let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPreco())
-       let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
-       setModalVisible(false)
-       zerarQtdProdutos()
-       zerarForm()
-       Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir:\n\n${pedido}Total: ${total}\nTroco para ${seuTroco}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+      if(troco == 0){
+        if(nome != '' && endereco != '' && bairro!= ''){
+         let pedido = montarPedidoUnidade()
+         let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPreco())
+         setModalVisible(false)
+         zerarQtdProdutos()
+         zerarForm()
+         Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir:\n\n${pedido}Total: ${total}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+        }else{
+          alert('Voce deve preencher o(s) campo(s) obrigatórios!')
+        }
       }else{
-        alert('Voce deve preencher o(s) campo(s) obrigatórios!')
+        if(troco<getTotalPreco()){
+          return alert('Troco incorreto!')
+        }else{
+          if(nome != '' && endereco != '' && bairro!= ''){
+            let pedido = montarPedidoUnidade()
+            let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotalPreco())
+            let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
+            setModalVisible(false)
+            zerarQtdProdutos()
+            zerarForm()
+            Linking.openURL(`whatsapp://send?text=Olá, me chamo ${nome} e gostaria de pedir:\n\n${pedido}Total: ${total}\nTroco para ${seuTroco}\n\nLocal de Entrega: \n${endereco} nº ${numero}\n${bairro}\n${complemento}&phone=${phone}`)
+           }else{
+             alert('Voce deve preencher o(s) campo(s) obrigatórios!')
+           } 
+        }
       }
     }
     function zerarQtdProdutos(){
@@ -135,6 +149,7 @@ export default function Pizzas({route}){
       setNumero('')
       setBairro('')
       setComplemento('')
+      setTroco('')
     }
     function isValidaSuco(){
       let conProduto = 0

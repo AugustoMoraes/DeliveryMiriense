@@ -106,6 +106,7 @@ export default function Refeicoes({route}){
       setNumero('')
       setBairro('')
       setComplemento('')
+      setTroco('')
     }
     function isValidaProduto(){
       let conProduto = 0
@@ -137,11 +138,7 @@ export default function Refeicoes({route}){
     }
     function cancelar(){
       setModalVisible(false)
-      setNome('')
-      setEndereco('')
-      setComplemento('')
-      setBairro('')
-      setNumero('')
+      zerarForm()
     }
 
     function decrementarProduto(item){
