@@ -28,7 +28,7 @@ export default function Categorias(){
     },[])
 
     function verListVendedores(item){
-        item.nome == 'SuperInformatica' ? navigation.navigate('SuperInformatica', {item}) :navigation.navigate('Home', {item})
+        navigation.navigate('Home', {item})
     }
     return(
         <View style={styles.container}>
