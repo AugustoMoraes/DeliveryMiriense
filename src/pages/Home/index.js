@@ -59,6 +59,8 @@ export default function Home({route}){
             }
             else if(item.categoria == 'frios_congelados' && item.nome == 'Frangão do Denis'){
                 navigation.navigate('FriosCongelados', {item})
+            }else if(item.categoria == 'variedades'){
+                navigation.navigate('Variedades', {item})
             }else{
                 alert('Desculpe, Houve um problema, Tente Atualizar seu Aplicativo!')
             }

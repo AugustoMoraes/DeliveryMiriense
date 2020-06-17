@@ -5,7 +5,9 @@ import firebase from 'firebase'
 import background from '../../images/background.jpeg'
 import logo from '../../images/logo.png'
 import styles from './styles'
-
+//import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/FontAwesome'
+Icon.loadFont()
 export default function Categorias(){
 
     const [categorias, setCategorias] = useState([])
@@ -51,6 +53,14 @@ export default function Categorias(){
                     </View>
                 )}
             />
+            <View style={styles.rodape}>
+                <Text style={styles.txtRodape}>Super Informática |</Text>
+                <TouchableOpacity>
+                    <Text>
+                        <Icon name="whatsapp" size={35} color="#A4C639"/>
+                    </Text>
+                </TouchableOpacity>
+            </View>
             </ImageBackground>
         </View>
     )

@@ -14,5 +14,16 @@ export default StyleSheet.create({
         width: '100%',
         height: '100%',
         borderRadius: 7
-    }
+    },
+    rodape:{
+        backgroundColor: '#55aa',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    txtRodape:{
+        fontSize: 30,
+        paddingHorizontal: 10,
+        color: '#fff'
+    },
 })

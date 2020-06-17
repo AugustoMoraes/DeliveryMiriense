@@ -9,7 +9,7 @@ import Categorias from './pages/Categorias'
 import Acai from './pages/Acai'
 import Pizzas from './pages/Pizzas'
 import FriosCongelados from './pages/FriosCongelados'
-import SuperInformatica from './pages/SuperInformatica'
+import Variedades from './pages/Variedades'
 import DeliciasMirienses from './pages/DeliciasMirienses'
 import Refeicoes from './pages/Refeicoes'
 import RosePizzaria from './pages/RosePizzaria'
@@ -27,7 +27,7 @@ export default function Routes(){
                 <AppStack.Screen name="Acai" component={Acai}/>
                 <AppStack.Screen name="Pizzas" component={Pizzas}/>
                 <AppStack.Screen name="FriosCongelados" component={FriosCongelados}/>
-                <AppStack.Screen name="SuperInformatica" component={SuperInformatica}/>
+                <AppStack.Screen name="Variedades" component={Variedades}/>
                 <AppStack.Screen name="DeliciasMirienses" component={DeliciasMirienses}/>
                 <AppStack.Screen name="Refeicoes" component={Refeicoes}/>
                 <AppStack.Screen name="RosePizzaria" component={RosePizzaria}/>
