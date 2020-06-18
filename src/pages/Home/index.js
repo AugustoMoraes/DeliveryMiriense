@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {View, Text, Image, TouchableOpacity, FlatList,ImageBackground, StatusBar} from 'react-native'
+import {View, Text, Image, TouchableOpacity, FlatList,ImageBackground, StatusBar, Linking} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 import styles from './styles'
 import firebase from '../../database/firebase'
@@ -31,7 +31,8 @@ export default function Home({route}){
                         h_fim: childItem.val().h_fim,
                         categoria: childItem.val().categoria,
                         contato: childItem.val().contato,
-                        img: childItem.val().img 
+                        img: childItem.val().img ,
+                        site: childItem.val().site
                     }
                     setVendedores(oldArray => [...oldArray, list])
                 })
@@ -45,6 +46,10 @@ export default function Home({route}){
                 navigation.navigate('Bebidas', {item})
             }else if(item.categoria == 'refeicoes' && item.nome == 'Delícias Mirienses'){
                 navigation.navigate('DeliciasMirienses', {item})
+            }else if(item.categoria == 'refeicoes' && item.nome == 'Frangão do Denis'){
+                navigation.navigate('FrangoAssado', {item})
+            }else if(item.categoria == 'refeicoes' && item.nome == 'Rei do Churrasco'){
+                navigation.navigate('ReiChurrasco', {item})
             }else if(item.categoria == 'refeicoes'){
                 navigation.navigate('Refeicoes', {item})
             }
@@ -60,7 +65,7 @@ export default function Home({route}){
             else if(item.categoria == 'frios_congelados' && item.nome == 'Frangão do Denis'){
                 navigation.navigate('FriosCongelados', {item})
             }else if(item.categoria == 'variedades'){
-                navigation.navigate('Variedades', {item})
+                Linking.openURL(item.site)
             }else{
                 alert('Desculpe, Houve um problema, Tente Atualizar seu Aplicativo!')
             }

@@ -18,7 +18,8 @@ export default StyleSheet.create({
         fontSize: 30,
         color: '#fff',
         width: '60%',
-        textAlign: 'center'
+        textAlign: 'center',
+
     },
     btnIconHeader:{
         height: 60,
@@ -47,28 +48,26 @@ export default StyleSheet.create({
         marginVertical: 10,
     },
     cardProduto:{
-        justifyContent: 'center',
+        flexDirection: 'row',
         marginVertical: 10,
         marginHorizontal: 10,
         backgroundColor: '#fff',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
         borderRadius: 10,
         elevation: 10,
-        opacity: 0.9 
+        opacity: 0.9
     },
     descProduto:{
         paddingHorizontal: 5,
-        width: '70%',
     },
     txtDesc:{
         fontSize:17,
         marginTop: 2,
     },
     img:{
-        marginTop: 10,
-        marginBottom: 5,
-        height: 210,
-        width: 210,
+        height: 100,
+        width: 100,
     },
     qtd:{
         flexDirection: 'row', 
