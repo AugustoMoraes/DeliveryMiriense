@@ -5,9 +5,8 @@ import firebase from 'firebase'
 import background from '../../images/background.jpeg'
 import logo from '../../images/logo.png'
 import styles from './styles'
-//import Icon from 'react-native-vector-icons/Ionicons'
-import Icon from 'react-native-vector-icons/FontAwesome'
-Icon.loadFont()
+import Ionicons from 'react-native-vector-icons/Ionicons'
+Ionicons.loadFont()
 export default function Categorias(){
 
     const [categorias, setCategorias] = useState([])
@@ -67,17 +66,17 @@ export default function Categorias(){
                 <View style={{width: '20%',flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TouchableOpacity onPress={()=> verInstagram()}>
                     <Text>
-                        <Icon name="instagram" size={35} color="#A4C639"/>
+                        <Ionicons name="logo-instagram" size={35} color="#A4C639"/>
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=> verFacebook()}>
                     <Text>
-                        <Icon name="instagram" size={35} color="#A4C639"/>
+                        <Ionicons name="logo-facebook" size={35} color="#A4C639"/>
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=> verWhatzapp()}>
                     <Text>
-                        <Icon name="instagram" size={35} color="#A4C639"/>
+                        <Ionicons name="logo-whatsapp" size={35} color="#A4C639"/>
                     </Text>
                 </TouchableOpacity>
                 </View>

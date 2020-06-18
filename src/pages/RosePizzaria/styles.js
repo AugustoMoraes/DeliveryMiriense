@@ -68,7 +68,7 @@ export default StyleSheet.create({
         marginTop: 10,
         marginBottom: 5,
         height: 210,
-        width: 210,
+        width: '90%',
     },
     qtd:{
         flexDirection: 'row', 
