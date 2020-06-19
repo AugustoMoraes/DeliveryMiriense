@@ -23,7 +23,7 @@ export default StyleSheet.create({
     },
     txtRodape:{
         fontSize: 30,
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         color: '#fff'
     },
 })

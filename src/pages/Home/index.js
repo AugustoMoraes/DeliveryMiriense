@@ -48,8 +48,6 @@ export default function Home({route}){
                 navigation.navigate('DeliciasMirienses', {item})
             }else if(item.categoria == 'refeicoes' && item.nome == 'Frangão do Denis'){
                 navigation.navigate('FrangoAssado', {item})
-            }else if(item.categoria == 'refeicoes' && item.nome == 'Rei do Churrasco'){
-                navigation.navigate('ReiChurrasco', {item})
             }else if(item.categoria == 'refeicoes'){
                 navigation.navigate('Refeicoes', {item})
             }

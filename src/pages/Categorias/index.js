@@ -62,8 +62,8 @@ export default function Categorias(){
                 )}
             />
             <View style={styles.rodape}>
-                <Text style={styles.txtRodape}>Super Informática |</Text>
-                <View style={{width: '20%',flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={styles.txtRodape}> Super Informática </Text>
+                <View style={{width: '24%',flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TouchableOpacity onPress={()=> verInstagram()}>
                     <Text>
                         <Ionicons name="logo-instagram" size={35} color="#A4C639"/>
