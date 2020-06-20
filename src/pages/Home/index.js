@@ -53,15 +53,16 @@ export default function Home({route}){
             }
             else if(item.categoria == 'lachonetes'){
                 navigation.navigate('Lanches', {item})
-            }else if(item.categoria == 'acai' || item.nome == 'Mariscos Miriense'){
+            }else if(item.categoria == 'acai'){
                 navigation.navigate('Acai', {item})
             }else if(item.nome == 'Ana Doces e Salgados'){
                 navigation.navigate('Pizzas', {item})
             }else if(item.nome == 'Pizzaria La Praça'){
                 navigation.navigate('RosePizzaria', {item})
-            }
-            else if(item.categoria == 'frios_congelados' && item.nome == 'Frangão do Denis'){
+            }else if(item.categoria == 'frios_congelados' && item.nome == 'Frangão do Denis'){
                 navigation.navigate('FriosCongelados', {item})
+            }else if(item.categoria == 'frios_congelados' && item.nome == 'Camarão e Cia'){
+                navigation.navigate('CamaraoCia', {item})
             }else if(item.categoria == 'variedades'){
                 Linking.openURL(item.site)
             }else{

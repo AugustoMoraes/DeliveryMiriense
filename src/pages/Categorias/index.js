@@ -66,12 +66,12 @@ export default function Categorias(){
                 <View style={{width: '24%',flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TouchableOpacity onPress={()=> verInstagram()}>
                     <Text>
-                        <Ionicons name="logo-instagram" size={35} color="#A4C639"/>
+                        <Ionicons name="logo-instagram" size={35} color="#c32aa3"/>
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=> verFacebook()}>
                     <Text>
-                        <Ionicons name="logo-facebook" size={35} color="#A4C639"/>
+                        <Ionicons name="logo-facebook" size={35} color="#3b5998"/>
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=> verWhatzapp()}>

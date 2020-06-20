@@ -633,7 +633,7 @@ export default function Pizzas({route}){
                   <View style={styles.cardProduto}>
                     <Image source={{uri: item.img}} style={styles.img}/>
                     <View style={styles.descProduto}>
-                    <Text style={styles.txtDesc}>Sabor: {item.nome}</Text>
+                    <Text style={styles.txtDesc}>{item.nome}</Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>Quantidade:</Text>
@@ -662,8 +662,8 @@ export default function Pizzas({route}){
                   <View style={styles.cardProduto}>
                     <Image source={{uri: item.img}} style={styles.img}/>
                     <View style={styles.descProduto}>
-                    <Text style={styles.txtDesc}>Refrigerante: {item.nome}</Text>
-                    <Text style={styles.txtDesc}>Sabores: {item.sabores}</Text>
+                    <Text style={styles.txtDesc}>{item.nome}</Text>
+                    <Text style={[styles.txtDesc, {color: '#999'}]}>{item.sabores}</Text>
                     <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
                         <View style={styles.qtd}>
                             <Text style={styles.txtDesc}>Quantidade:</Text>

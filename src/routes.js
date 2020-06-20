@@ -14,6 +14,7 @@ import DeliciasMirienses from './pages/DeliciasMirienses'
 import Refeicoes from './pages/Refeicoes'
 import RosePizzaria from './pages/RosePizzaria'
 import FrangoAssado from './pages/FrangoAssado'
+import CamaraoCia from './pages/CamaraoCia'
 
 const AppStack = createStackNavigator()
 
@@ -33,6 +34,7 @@ export default function Routes(){
                 <AppStack.Screen name="Refeicoes" component={Refeicoes}/>
                 <AppStack.Screen name="RosePizzaria" component={RosePizzaria}/>
                 <AppStack.Screen name="FrangoAssado" component={FrangoAssado}/>
+                <AppStack.Screen name="CamaraoCia" component={CamaraoCia}/>
             </AppStack.Navigator>
         </NavigationContainer>
     )

@@ -16,7 +16,7 @@ export default StyleSheet.create({
         borderRadius: 7
     },
     rodape:{
-        backgroundColor: '#55aa',
+        //backgroundColor: '#fff',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -24,6 +24,6 @@ export default StyleSheet.create({
     txtRodape:{
         fontSize: 30,
         paddingHorizontal: 5,
-        color: '#fff'
+        //color: '#fff'
     },
 })
