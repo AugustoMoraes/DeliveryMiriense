@@ -211,7 +211,7 @@ export default function RosePizzaria({route}){
         })
         sucos.map((childItem)=>{
         if(childItem.cont > 0){
-            msg += `${childItem.cont} ${childItem.nome} Família\n`
+            msg += `${childItem.cont} ${childItem.nome}\n`
           }
         })
         return msg
@@ -359,12 +359,19 @@ export default function RosePizzaria({route}){
       },0)
 
     }
+    function getQtdTotalBebidas(){
+      return sucos.reduce((total,produto)=>{
+          total+= produto.cont
+          return total
+      },0)
+
+    }
   
     function getTotalPreco(){
       return  getTotalPequena() + getTotalMedia() + getTotalGrande() + getTotalFamilia() + getTotalSucos()
     }
     function getQtdTotalProdutos(){
-      return getQtdTotalPizza()
+      return getQtdTotalPizza() + getQtdTotalBebidas()
     }
    
     return(

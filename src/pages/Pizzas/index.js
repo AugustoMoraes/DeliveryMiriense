@@ -26,6 +26,7 @@ export default function Pizzas({route}){
     const [modalVisible, setModalVisible] = useState(false)
     const [produtos, setProdutos] = useState([])
     const [sucos, setSucos] = useState([])
+    const [salgados, setSalgados] = useState([])
     const [refri, setRefri] = useState([])
     const [nome, setNome] = useState('')
     const [endereco, setEndereco] = useState('')
@@ -64,6 +65,24 @@ export default function Pizzas({route}){
         });
     }
     
+    async function loadingListSalgados(){
+
+      await firebase.database().ref(item.key).child('salgados').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
+        setSalgados([])
+        snapshot.forEach((childItem) => {
+          let list = {
+            key: childItem.key,
+            nome: childItem.val().nome,
+            sabores: childItem.val().sabores,
+            cont: parseFloat(childItem.val().cont),
+            valor: parseFloat(childItem.val().valor),
+            img: childItem.val().img
+          };
+          setSalgados(oldArray => [...oldArray, list]); 
+        });
+        
+        });
+    }
     async function loadingListSucos(){
 
       await firebase.database().ref(item.key).child('sucos').orderByChild('disponivel').equalTo('true').on('value', (snapshot)=> {
@@ -106,6 +125,7 @@ export default function Pizzas({route}){
       loadingList()
       loadingListSucos()
       loadingListRefri()
+      loadingListSalgados()
     }, []);
     
     function confirmar(){
@@ -268,12 +288,17 @@ export default function Pizzas({route}){
         })
         sucos.map((childItem)=>{
         if(childItem.cont > 0){
-            msg += `${childItem.cont} ${childItem.nome} Família\n`
+            msg += `${childItem.cont} ${childItem.nome}\n`
           }
         })
         refri.map((childItem)=>{
         if(childItem.cont > 0){
-            msg += `${childItem.cont} ${childItem.nome} Família\n`
+            msg += `${childItem.cont} ${childItem.nome}\n`
+          }
+        })
+        salgados.map((childItem)=>{
+        if(childItem.cont > 0){
+            msg += `${childItem.cont} ${childItem.nome}\n`
           }
         })
         return msg
@@ -411,6 +436,23 @@ export default function Pizzas({route}){
         return produto
       }))
     }
+    function decrementarSalgado(item){
+      setSalgados(salgados.map(produto =>{
+        if((item.key == produto.key) && (produto.cont != 0)){
+          produto.cont--
+        }
+        return produto
+      }))
+    }
+
+    function incrementSalgado(item){
+      setSalgados(salgados.map(produto =>{
+        if(item.key == produto.key){
+          produto.cont++
+        }
+        return produto
+      }))
+    }
     function decrementarRefri(item){
       setRefri(refri.map(produto =>{
         if((item.key == produto.key) && (produto.cont != 0)){
@@ -437,6 +479,12 @@ export default function Pizzas({route}){
     }
     function getTotalSucos(){
         return sucos.reduce((total,produto)=>{
+          total+= (produto.valor * produto.cont)
+          return total
+        },0)
+    }
+    function getTotalSalgados(){
+        return salgados.reduce((total,produto)=>{
           total+= (produto.valor * produto.cont)
           return total
         },0)
@@ -480,7 +528,7 @@ export default function Pizzas({route}){
       },0)
     }
     
-    function getTotalUnidade(){
+    function getTotalUnidadePizza(){
       return produtos.reduce((total,produto)=>{
         if(!isNaN(produto.contP)){
           total+= (produto.contP+produto.contM+produto.contG+produto.contGG+produto.contF)
@@ -492,12 +540,30 @@ export default function Pizzas({route}){
         return total
       },0)
     }
-  
+    function getTotalUnidadeSuco(){
+      return sucos.reduce((total,produto)=>{
+        total += produto.cont
+        return total
+      },0)
+    }
+    function getTotalUnidadeRefi(){
+      return refri.reduce((total,produto)=>{
+        total += produto.cont
+        return total
+      },0)
+    }
+    function getTotalUnidadeSalgados(){
+      return salgados.reduce((total,produto)=>{
+        total += produto.cont
+        return total
+      },0)
+    }
+    
     function getTotalPreco(){
-      return getTotalBrotinho() + getTotalPequena() + getTotalMedia() + getTotalGrande() + getTotalGigante() + getTotalFamilia() + getTotalSucos() + getTotalRefri()
+      return getTotalBrotinho() + getTotalPequena() + getTotalMedia() + getTotalGrande() + getTotalGigante() + getTotalFamilia() + getTotalSucos() + getTotalRefri() + getTotalSalgados()
     }
     function getQtdTotalProdutos(){
-      return getTotalUnidade()
+      return getTotalUnidadePizza() + getTotalUnidadeRefi() + getTotalUnidadeSalgados() + getTotalUnidadeSuco()
     }
    
     return(
@@ -621,6 +687,36 @@ export default function Pizzas({route}){
                           </View>
                       </View>
                   </View>               
+                  </View>
+                )}
+            />      
+            </View>
+            <View style={styles.viewCard}>
+            <FlatList
+                key= {item => item.key}
+                data={salgados}
+                renderItem= {({item})=>(
+                  <View style={styles.cardProduto}>
+                    <Image source={{uri: item.img}} style={styles.img}/>
+                    <View style={styles.descProduto}>
+                    <Text style={styles.txtDesc}>{item.nome}</Text>
+                    <Text style={[styles.txtDesc,{color:'#999'}]}>{item.sabores}</Text>
+                    <Text style={styles.txtDesc}>Valor: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.valor)}</Text>
+                        <View style={styles.qtd}>
+                            <Text style={styles.txtDesc}>Quantidade:</Text>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarSalgado(item)}>
+                                <Icon name="minuscircle" size={25} color="#ff0000"/>
+                            </TouchableOpacity>
+                            <Text>
+                              {item.cont}
+                            </Text>
+                            <TouchableOpacity style={styles.btnQtd} onPress={()=>incrementSalgado(item)}>
+                                <Icon name="pluscircle" size={25} color= '#008000'/>
+                            </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>               
                   </View>
                 )}
             />      
