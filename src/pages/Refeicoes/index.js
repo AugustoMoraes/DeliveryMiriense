@@ -131,7 +131,7 @@ export default function Refeicoes({route}){
         var msg =''
         produtos.map((childItem)=>{
         if(childItem.cont > 0){
-            msg += `${childItem.cont} ${childItem.nome}\n`
+            msg += `${childItem.cont} ${childItem.nome} ${childItem.valor}\n`
          }
       })
       return msg

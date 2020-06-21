@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native'
 import firebase from 'firebase'
 import background from '../../images/background.jpeg'
 import logo from '../../images/logo.png'
+import super_informatica from '../../images/SI.png'
 import styles from './styles'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 Ionicons.loadFont()
@@ -62,7 +63,7 @@ export default function Categorias(){
                 )}
             />
             <View style={styles.rodape}>
-                <Text style={styles.txtRodape}> Super Informática </Text>
+                <Image source={super_informatica} style={{ height:'100%', width: '70%', marginHorizontal: 5}} resizeMode='contain'/>
                 <View style={{width: '24%',flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TouchableOpacity onPress={()=> verInstagram()}>
                     <Text>
@@ -76,7 +77,7 @@ export default function Categorias(){
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=> verWhatzapp()}>
                     <Text>
-                        <Ionicons name="logo-whatsapp" size={35} color="#A4C639"/>
+                        <Ionicons name="logo-whatsapp" size={35} color="#045e11"/>
                     </Text>
                 </TouchableOpacity>
                 </View>

@@ -74,7 +74,7 @@ export default function FrangoAssado({route}){
         if(troco<getTotal()){
           return alert('Troco incorreto!')
         }else{
-          if(nome != '' && endereco != '' && bairro!= '' && troco == 0){
+          if(nome != '' && endereco != '' && bairro!= ''){
             let pedido = montarPedidoUnidade()
             let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
             let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
@@ -136,7 +136,7 @@ export default function FrangoAssado({route}){
     function decrementarProduto(item){
       setProdutos(produtos.map(produto =>{
         if((item.key == produto.key) && (produto.cont != 0)){
-          produto.cont -= 0.5
+          produto.cont--
         }
         return produto
       }))
@@ -145,7 +145,7 @@ export default function FrangoAssado({route}){
     function incrementProduto(item){
       setProdutos(produtos.map(produto =>{
         if(item.key == produto.key){
-          produto.cont += 0.5
+          produto.cont++
         }
         return produto
       }))

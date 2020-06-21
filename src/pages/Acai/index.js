@@ -57,7 +57,7 @@ export default function Acai({route}){
       
     }, []);
     
-    function confirmar(){
+    function confirmar(){ 
       if(troco == 0){
         if(nome != '' && endereco != '' && bairro!= ''){
          let pedido = montarPedidoUnidade()
@@ -73,7 +73,7 @@ export default function Acai({route}){
         if(troco<getTotal()){
           return alert('Troco incorreto!')
         }else{
-          if(nome != '' && endereco != '' && bairro!= '' && troco == 0){
+          if(nome != '' && endereco != '' && bairro!= ''){ 
             let pedido = montarPedidoUnidade()
             let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
             let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)

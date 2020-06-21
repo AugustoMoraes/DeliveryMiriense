@@ -17,13 +17,10 @@ export default StyleSheet.create({
     },
     rodape:{
         //backgroundColor: '#fff',
+        width: '100%',
+        height: 60,
         flexDirection: 'row',
-        justifyContent: 'center',
+        //justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    txtRodape:{
-        fontSize: 30,
-        paddingHorizontal: 5,
-        //color: '#fff'
     },
 })
