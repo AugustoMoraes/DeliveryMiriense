@@ -56,6 +56,7 @@ export default function Pizzas({route}){
             pequena: parseFloat(childItem.val().pequena),
             media: parseFloat(childItem.val().media),
             grande: parseFloat(childItem.val().grande),
+            gigante: parseFloat(childItem.val().gigante),
             familia: parseFloat(childItem.val().familia),
             img: childItem.val().img
           };
@@ -659,7 +660,7 @@ export default function Pizzas({route}){
                           </View>
                       </View>
                       <View style={styles.qtd}>
-                          <Text style={styles.txtDesc}>Gigante: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.grande)}</Text>
+                          <Text style={styles.txtDesc}>Gigante: {Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(item.gigante)}</Text>
                           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                           <TouchableOpacity style={styles.btnQtd} onPress={()=>decrementarProdutoGigante(item)}>
                               <Icon name="minuscircle" size={25} color="#ff0000"/>
