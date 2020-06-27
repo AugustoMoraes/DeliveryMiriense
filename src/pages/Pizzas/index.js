@@ -518,7 +518,7 @@ export default function Pizzas({route}){
     }
     function getTotalGigante(){
       return produtos.reduce((total,produto)=>{
-        total+= (produto.grande * produto.contGG)
+        total+= (produto.gigante * produto.contGG)
         return total
       },0)
     }
