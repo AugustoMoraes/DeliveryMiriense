@@ -82,7 +82,7 @@ export default function Refeicoes({route}){
     function confirmar(){ 
       if(troco == 0){
         if(nome != '' && endereco != '' && bairro!= ''){
-          let pedido = montarPedidoUnidade()
+          let pedido = montarPedido()
           let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
           setModalVisible(false)
           zerarQtdProdutos()
@@ -96,7 +96,7 @@ export default function Refeicoes({route}){
           return alert('Troco incorreto!')
         }else{
           if(nome != '' && endereco != '' && bairro!= ''){
-            let pedido = montarPedidoUnidade()
+            let pedido = montarPedido()
             let total = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(getTotal())
             let seuTroco = Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(troco)
             setModalVisible(false)
@@ -117,6 +117,11 @@ export default function Refeicoes({route}){
       setComplemento('')
       setTroco('')
     }
+    function zerarQtdProdutos(){
+      produtos.map( produto =>{
+        produto.cont = 0
+      })
+    }
     function isValidaProduto(){
       let conProduto = 0
       produtos.map( produto =>{
@@ -136,7 +141,7 @@ export default function Refeicoes({route}){
         alert('Nenhum Produto selecionado para compra!')
       }
     }
-    function montarMsg(){
+    function montarPedido(){
         var msg =''
         produtos.map((childItem)=>{
         if(childItem.cont > 0){
